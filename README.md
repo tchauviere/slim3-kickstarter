@@ -15,10 +15,10 @@ It is composed of many great packages such as:
 
 ## Guide
 
-### Install dependencies
+### Create project
 
-`composer install` :
-Will download the `dependencies` needed for the project
+`composer create-project --no-interaction tchauviere/slim3-kickstarter <app_name>` :
+Will download the project and install everything for you where `<app_name>` is up to you ;)
 
 ### Assets management
 
