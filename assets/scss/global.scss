@@ -1,0 +1,32 @@
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f4f8e7;
+  font-family: "Roboto", sans-serif;
+}
+
+.navbar-brand {
+  color: #f4f8e7 !important;
+  margin: 0px 15px !important;
+  padding: 0px;
+  > img {
+    width: 40px;
+  }
+}
+
+.navbar-nav > li {
+  > a {
+    color: #f4f8e7 !important;
+  }
+  &:hover {
+    background: #f4f8e7;
+  }
+  > a:hover {
+    color: #7ba72c !important;
+  }
+}

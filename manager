@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+
+use Commands\Migration\CreateMigrationCommand;
+use Commands\Migration\RunMigrationCommand;
+
+use Commands\Seed\CreateSeedCommand;
+use Commands\Seed\RunSeedCommand;
+
+use Commands\Asset\CompileCommand;
+
+use Commands\Secret\GenerateSecretCommand;
+
+$application = new Application();
+
+/*
+ * Migration commands
+ */
+$application->add(new CreateMigrationCommand());
+$application->add(new RunMigrationCommand());
+
+/*
+ * Seed commands
+ */
+$application->add(new CreateSeedCommand());
+$application->add(new RunSeedCommand());
+
+/*
+ * Assets management commands
+ */
+$application->add(new CompileCommand());
+
+/*
+ * Secret generator
+ */
+$application->add(new GenerateSecretCommand());
+
+$application->run();

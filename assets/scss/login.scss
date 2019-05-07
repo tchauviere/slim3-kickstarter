@@ -1,0 +1,54 @@
+html {
+  background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+  height: 100%;
+}
+
+body {
+  background: transparent;
+}
+
+.login-signup-container {
+  margin-top: 15px;
+}
+
+.ls-switch {
+  width: 50%;
+  text-align: center;
+}
+
+.ls-switch-login {
+  border-top-right-radius: 0px !important;
+}
+
+.ls-switch-signup {
+  border-top-left-radius: 0px !important;
+}
+
+.tab-pane {
+  float: left;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.nav-tabs > li {
+  margin: 0 !important;
+  > a {
+    margin: 0 !important;
+    background: lightgray;
+  }
+}
+
+.label_l_stay {
+  font-weight: 100 !important;
+}
+
+.login-signup-header {
+  text-align: center;
+  padding: 15px;
+  > img {
+    margin: 0 auto;
+  }
+}

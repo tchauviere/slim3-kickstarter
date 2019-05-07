@@ -1,0 +1,7 @@
+.DS_Store
+/.idea/
+/vendor/
+/logs/*
+/cache/*
+!/cache/.gitkeep
+!/logs/.gitkeep

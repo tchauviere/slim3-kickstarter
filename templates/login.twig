@@ -1,0 +1,105 @@
+{% extends '_struct/base.twig' %}
+
+{% block title %}Login -{% endblock %}
+{% block css %}
+    <link href='/css/login.min.css' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{%  block body %}
+    <div class="container">
+        <div class="row">
+            <div class="login-signup-header col-md-7 col-md-offset-2">
+                <img src="/img/logo.png" class="img-responsive" alt="Logo">
+            </div>
+            <div class="login-signup-container col-md-7 col-md-offset-2">
+                <!-- Nav tabs -->
+                <ul class="ls-switch-container nav nav-tabs" role="tablist">
+                    <li role="presentation" class="ls-switch {% if action != 'signup' %}active{% endif %}"><a href="#login"  class="ls-switch-login" aria-controls="login" role="tab" data-toggle="tab">{{ 'signin'|trans }}</a></li>
+                    <li role="presentation" class="ls-switch {% if action == 'signup' %}active{% endif %}"><a href="#signup" class="ls-switch-signup" aria-controls="signup" role="tab" data-toggle="tab"> {{ 'signup'|trans }}</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="ls-login-container tab-pane col-md-12 {% if action != 'signup' %}active{% endif %}" id="login">
+                        {% if login is defined and login == 'false'%}
+                            <div class="col-md-12">
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
+                                    {{ 'bad_credentials'|trans }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <form method="post" action="{{path_for('postLogin')}}">
+                            <div class="form-group col-md-12">
+                                <label for="l_email">{{ 'email'|trans }}</label>
+                                <input type="text" class="form-control" id="l_email" name="l_email" placeholder="{{ 'email_placeholder'|trans }}">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="lastname">{{ 'password'|trans }}</label>
+                                <input type="password" class="form-control" id="l_password" name="l_password" >
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="label_l_stay">
+                                    <input type="checkbox" name="l_stay" id="l_stay"> {{ 'remember_me'|trans }}
+                                </label>
+                            </div>
+                            <br>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-info "><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> {{ 'connect'|trans }}</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="ls-signup-container tab-pane col-md-12 {% if action == 'signup' %}active{% endif %}" id="signup">
+                        {% if errors is defined %}
+                            <div class="col-md-12">
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
+                                    {{ errors.title }}
+                                    <ul>
+                                        {% for msg in errors.msgs %}
+                                            <li>{{ msg }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <form method="post" action="{{path_for('postSignup')}}">
+                            <div class="form-group col-md-6">
+                                <label for="s_firstname">{{ 'firstname'|trans }}</label>
+                                <input type="text" class="form-control" id="s_firstname" name="s_firstname" placeholder="{{ 'firstname'|trans }}" value="{% if errors is defined %}{{ errors.form_data.s_firstname }}{% endif %}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="s_lastname">{{ 'lastname'|trans }}</label>
+                                <input type="text" class="form-control" id="s_lastname" name="s_lastname" placeholder="{{ 'lastname'|trans }}" value="{% if errors is defined %}{{ errors.form_data.s_lastname }}{% endif %}">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="s_email">{{ 'email'|trans }}</label>
+                                <input type="email" class="form-control" id="s_email" name="s_email" placeholder="{{ 'email_placeholder'|trans }}" value="{% if errors is defined %}{{ errors.form_data.s_email }}{% endif %}">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="s_email_confirmation">{{ 'email_confirm'|trans }}</label>
+                                <input type="email" class="form-control" id="s_email_confirmation" name="s_email_confirmation" placeholder="{{ 'email_placeholder'|trans }}" value="{% if errors is defined %}{{ errors.form_data.s_email_confirmation }}{% endif %}">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="s_password">{{ 'password'|trans }}</label>
+                                <input type="password" class="form-control" id="s_password" name="s_password" placeholder="{{ 'password_placeholder'|trans }}" value="{% if errors is defined %}{{ errors.form_data.s_password }}{% endif %}">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="s_password_confirmation">{{ 'confirm_password'|trans }}</label>
+                                <input type="password" class="form-control" id="s_password_confirmation" name="s_password_confirmation" placeholder="{{ 'password_placeholder'|trans }}" value="">
+                            </div>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-info "><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {{ 'signup'|trans }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/js/login.min.js" type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends '_struct/base.twig' %}
+
+{% block title %}{{ 'dashboard_title'|trans }} -{% endblock %}
+{% block css %}
+    <link href="/css/admin.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    {% include '_partials/top_navbar.twig' %}
+    <div class="container">
+        <div class="row">
+            {% include '_partials/left_navbar.twig' %}
+            <div class="admin-content col-md-10 col-md-offset-2">
+                <div class="col-md-12">
+                    {{ 'dashboard_welcome'|trans }}
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block js %}
+    <script src="/js/admin.min.js"></script>
+{% endblock %}
