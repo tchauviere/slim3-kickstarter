@@ -1,4 +1,9 @@
 # Slim3 Boilerplate
+[![Latest Stable Version](https://poser.pugx.org/tchauviere/slim3-kickstarter/v/stable)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
+[![Latest Unstable Version](https://poser.pugx.org/tchauviere/slim3-kickstarter/v/unstable)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
+[![License](https://poser.pugx.org/tchauviere/slim3-kickstarter/license)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
+[![composer.lock](https://poser.pugx.org/tchauviere/slim3-kickstarter/composerlock)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
+
 
 This slim3 boilerplate is made for everyone who would like to kickstart quickly a web project.
 
@@ -71,3 +76,5 @@ Indeed, this secret is used to salt your Users passwords.
 Feel free to open issues, ask questions or make some pull requests ! I'm maintaining this on my spare time so give me some time to get back to you :)
 
 Enjoy !
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
