@@ -1,30 +1,31 @@
 <?php
 
 return array(
+    'app_title' => 'Super App',
     'suffix_title' => 'Super App',
+    'tag_lang_html' => 'en',
     'title_error' => 'Oops !',
-
-    /* Top navbar */
+    'description_html' => 'Slim3 Kickstarter',
+    'author_html' => 'Creation: BlackRock Digital | Integration: Thibaud Chauviere',
+    'close_modal' => 'Close modal',
+    'close' => 'Close',
+    'password_reset_failed' => 'Password recovery action has failed, please try again.',
+    'password_reset_success' => 'You should receive an email containing a password recovery link.',
     'toggle_nav' => 'Toggle navigation',
-
-    /* Left navbar */
     'dashboard' => 'Dashboard',
-
-    /* Login connection part */
-    'signin' => 'Sign-in',
-    'signup' => 'Sign-up',
+    'login_title' => 'Connect',
+    'signup' => 'Create an account',
     'bad_credentials' => 'Bad credentials !',
-    'email' => 'Email',
-    'email_placeholder' => 'me@email.com',
-    'password' => 'Password',
+    'email_placeholder' => 'Email',
+    'password_placeholder' => 'Password',
     'remember_me' => 'Remember me',
     'connect' => 'Connect',
-
-    /* Login signup part */
+    'forgot_password' => 'Forgot password ?',
+    'register_title' => 'Register',
     'firstname' => 'Firstname',
     'lastname' => 'Lastname',
-    'email_confirm' => 'Confirm email',
-    'password_placeholder' => 'xxxxxxx',
+    'email_confirm_placeholder' => 'Confirm email',
+    'password_confirm_placeholder' => 'Password confirm',
     'confirm_password' => 'Confirm password',
     'err_filled_form' => 'It seems that there\'s problem with your filled form',
     'err_firstname' => 'Firstname is mandatory',
@@ -37,14 +38,24 @@ return array(
     'err_mismatch_password' => 'Password and confirm password are different',
     'err_account_exists' => 'It seems you already subscribed!',
     'err_signup_general' => 'We encouter difficulties to process your registration. We invite you to try again.',
-
-    /* 404 */
+    'modal_forgot_password_title' => 'Retrieve your password',
+    'reset_password_btn' => 'Reset my password',
+    'recovery_password_explanation' => 'Put your account email in order to receive a password recovery email',
+    'register_h1' => 'Register',
+    'already_have_account' => 'Already have an account ? Login now !',
     '404_title' => '404 Error !',
     '404_subtitle' => 'Oops! This page was not found !',
     '404_msg' => 'Sorry, it seems this page does not exists or we might have trouble to load it.',
     'back_home' => 'Back to home',
-
-    /* Dashboard */
     'dashboard_title' => 'Dashboard',
     'dashboard_welcome' => 'Welcome on dashboard',
+    'register_btn' => 'Create my account',
+    'dashboard_brand_name' => 'Back Office',
+    'dashboard_menu_item' => 'Dashboard',
+    'logout_modal_title' => 'Ready to leave?',
+    'logout_msg' => 'Select "Logout" below if you are ready to end your current session.',
+    'cancel_btn' => 'Cancel',
+    'logout_btn' => 'Disconnect',
+    'dashboard_profile_menu_item' => 'Profile',
+    'dashboard_logout_menu_item' => 'Logout',
 );
