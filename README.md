@@ -13,7 +13,7 @@ It is composed of many great packages such as:
   - Phinx
   - Monolog
   - Symfony Console
-  - Bootstrap 3 (should be updated to version 4 soon)
+  - Bootstrap 4
   - JQuery
   - leafo/scssphp
   - matthiasmullie/minify
