@@ -1,4 +1,11 @@
 <?php
+/**
+ * Author:  tchauviere <thibaud.chauviere@gmail.com>
+ * Project: slim3-kickstarter
+ * File:    BaseMiddleware.php
+ * Date:    15/04/2019
+ * Time:    12:54
+ */
 
 namespace Middlewares;
 
