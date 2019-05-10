@@ -2,6 +2,8 @@
 
 return array(
     'app_title' => 'Super App',
+    'app_author' => 'Super Company',
+    'email_subtitle_app_author' => 'by Super Company',
     'suffix_title' => 'Super App',
     'tag_lang_html' => 'en',
     'title_error' => 'Oops !',
@@ -58,4 +60,8 @@ return array(
     'logout_btn' => 'Disconnect',
     'dashboard_profile_menu_item' => 'Profile',
     'dashboard_logout_menu_item' => 'Logout',
+    'password_recovery_email_title' => 'Password recovery process',
+    'password_recovery_hello' => 'Hello',
+    'password_recovery_follow_link' => 'Follow this link in order to reset your password:',
+    'all_rights_reserved' => 'All rights reserved',
 );
