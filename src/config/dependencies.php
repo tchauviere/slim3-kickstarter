@@ -20,6 +20,8 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Monolog\Handler\StreamHandler;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 $container = $app->getContainer();
 // Remove default slim3 404 Handler
 unset($container['notFoundHandler']);
@@ -59,6 +61,23 @@ $container['notFoundHandler'] = function ($c) {
         $twig = $c->get('twig');
         return $twig->render($response->withStatus(404), '404.twig', []);
     };
+};
+
+$container['mailer'] = function ($c) {
+    $settings = $c->get('settings')['mailer'];
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Port = $settings['port'];
+    $mail->SMTPAuth = true;
+    // Sendgrid
+    $mail->Username= $settings['username'];
+    $mail->Password = $settings['password'];
+    $mail->Host= $settings['smtp'];
+    $mail->SMTPSecure = $settings['encryption'];
+    $mail->CharSet = "UTF-8";
+
+    return $mail;
 };
 
 $container['translator'] = function ($c) {

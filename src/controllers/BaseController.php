@@ -20,12 +20,14 @@ class BaseController
     protected $twig;
     protected $eloquent;
     protected $translator;
+    protected $mailer;
 
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
         $this->twig = $container->get('twig');
         $this->eloquent = $container->get('eloquent');
         $this->translator = $container->get('translator');
+        $this->mailer = $container->get('mailer');
     }
 
     protected function getLoggedUser() {
