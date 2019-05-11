@@ -31,12 +31,21 @@ return [
             'driver' => 'mysql',
             'host' => 'localhost',
             'port' => 3306,
-            'database' => 'test_slim3',
+            'database' => '',
             'username' => 'root',
-            'password' => 'root',
+            'password' => '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
-        ]
+        ],
+
+        // Mailer : Check PHPMailer Documentation to see all option and don't forget to modify dependencies.php according to these change.
+        'mailer' => [
+            'smtp' => 'my.smtp.com',
+            'port' => 985,
+            'username' => '',
+            'password' => '',
+            'encryption' => '',
+        ],
     ],
 ];
