@@ -68,5 +68,6 @@ return array(
     'change_password_btn' => 'Change my password',
     'reset_password_mismatch' => 'Passwords mismatch !',
     'new_password_success' => 'You have successfully changed your password. You can now login with it.',
-    'new_password_failed' => 'An error occured while trying to change your password'
+    'new_password_failed' => 'An error occured while trying to change your password',
+    'email_team_signature' => 'The team'
 );
