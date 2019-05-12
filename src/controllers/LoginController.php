@@ -9,6 +9,7 @@
 
 namespace Controllers;
 
+use Models\Recovery;
 use Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -21,7 +22,9 @@ class LoginController extends BaseController
         if ($request->getParam('reset_password')) {
             $tplData['reset_password'] = $request->getParam('reset_password');
         }
-
+        if ($request->getParam('new_password')) {
+            $tplData['new_password'] = $request->getParam('new_password');
+        }
         if ($request->getParam('login')) {
             $tplData['login'] = $request->getParam('login');
         }
@@ -47,11 +50,143 @@ class LoginController extends BaseController
         }
     }
 
+    public function postNewPassword(Request $request, Response $response, $args) {
+        try {
+            $token = $args['token'];
+            $recovery = Recovery::where('token', $token)->firstOrFail();
+
+            // Add five minutes in case user started recovery procedure at the limit expires date
+            // and take a bit of time to fill out recovery form
+            $now = date('Y-m-d H:i:s', strtotime("+5 minutes"));
+
+            if (strtotime($recovery->expires_at) < $now) {
+                $recovery->forceDelete();
+                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                    'new_password' => 'false',
+                    'test' => 'outdated_on_actual_reset',
+                ]));
+            }
+
+            $newPassword = $request->getParam('new_password');
+            $newPasswordConfirm = $request->getParam('new_password_confirm');
+
+            if ($newPassword !== $newPasswordConfirm) {
+                return $response->withRedirect(
+                    $this->container->get('router')->pathFor(
+                        'getResetPassword',
+                        [
+                            'token' => $token
+                        ],
+                        [
+                            'mismatch' => 'true',
+                        ]
+                    ));
+            }
+
+            $user = User::where('id', $recovery->user_id)->firstOrFail();
+            $user->password = sha1($this->container->get('settings')['secret'].$newPassword);
+            $user->saveOrFail();
+
+            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                'new_password' => 'true',
+            ]));
+        } catch (\Exception $e) {
+            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                'new_password' => 'false',
+                'test' => 'execption_on_actual_reset',
+            ]));
+        }
+    }
+
+    public function getResetPassword(Request $request, Response $response, $args) {
+        try {
+            $token = $args['token'];
+            $recovery = Recovery::where('token', $token)->firstOrFail();
+            $now = time();
+
+            if (strtotime($recovery->expires_at) < $now) {
+                $recovery->forceDelete();
+                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                    'new_password' => 'false',
+                    'test' => 'outdated',
+                ]));
+            }
+
+            $tplData = [
+                'token' => $token
+            ];
+
+            if ($request->getParam('mismatch')) {
+                $tplData['mismatch'] = true;
+            }
+
+            return $this->twig->render($response, 'reset_password.twig', $tplData);
+
+        } catch (\Exception $e) {
+            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                'new_password' => 'false',
+                'test' => 'execption',
+            ]));
+        }
+
+
+    }
+
     public function postResetPassword(Request $request, Response $response, $args) {
         try {
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin') [], [
-                'reset_password' => 'true',
+            $email = $request->getParam('fp_email');
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                    'reset_password' => 'false',
+                ]));
+            }
+
+            $user = User::where('email', $email)->firstOrFail();
+
+            // Check if a recovery does not already exists for current user
+            $recoveryExists = Recovery::where('user_id', $user->id)->first();
+
+            if ($recoveryExists) {
+                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                    'reset_password' => 'false',
+                ]));
+            }
+
+            $recovery = new Recovery();
+            $recovery->user_id = $user->id;
+            $recovery->token = sha1(time().$user->email.$this->container->get('settings')['secret']);
+            $recovery->expires_at = date('Y-m-d H:i:s', strtotime("+30 min"));
+            $recovery->saveOrFail();
+
+            $recoveryURL = $request->getUri()->getScheme().'://'.$request->getUri()->getHost();
+            $recoveryURL .= $this->container->get('router')->pathFor(
+                'getResetPassword',
+                [
+                    'token' => $recovery->token
+                ],
+                []
+            );
+
+            // Prepare email
+            $passwordRecoveryEmail = $this->twig->fetch('emails/password_recovery.twig', [
+                'user' => $user,
+                'recovery_url' => $recoveryURL,
             ]);
+
+            $this->mailer->setFrom(
+                $this->container->get('settings')['mailer']['mail_from'],
+                $this->container->get('settings')['mailer']['name_from']
+            );
+            $this->mailer->addAddress($user->email);
+            $this->mailer->isHTML(true); // Set email format to HTML
+            $this->mailer->Subject = $this->translator->trans('password_recovery_email_title');
+            $this->mailer->Body    = $passwordRecoveryEmail;
+            $this->mailer->send();
+
+            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                'reset_password' => 'true',
+            ]));
         } catch (\Exception $e) {
             return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                 'reset_password' => 'false',

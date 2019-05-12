@@ -64,4 +64,9 @@ return array(
     'password_recovery_hello' => 'Hello',
     'password_recovery_follow_link' => 'Follow this link in order to reset your password:',
     'all_rights_reserved' => 'All rights reserved',
+    'reset_password_title' => 'Reset your password',
+    'change_password_btn' => 'Change my password',
+    'reset_password_mismatch' => 'Passwords mismatch !',
+    'new_password_success' => 'You have successfully changed your password. You can now login with it.',
+    'new_password_failed' => 'An error occured while trying to change your password'
 );
