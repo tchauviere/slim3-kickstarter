@@ -13,6 +13,7 @@ It is composed of many great packages such as:
   - Phinx
   - Monolog
   - Symfony Console
+  - PHPMailer
   - Bootstrap 4
   - JQuery
   - leafo/scssphp
