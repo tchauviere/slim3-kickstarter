@@ -18,6 +18,7 @@ It is composed of many great packages such as:
   - JQuery
   - leafo/scssphp
   - matthiasmullie/minify
+  - vlucas/phpdotenv
 
 ## Guide
 
