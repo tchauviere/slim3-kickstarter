@@ -1,5 +1,12 @@
 <?php
 
+require __DIR__ . '/../../vendor/autoload.php';
+
+// Load environment
+putenv('BASE_DIR='.realpath(__DIR__.'/../../'));
+$dotenv = \Dotenv\Dotenv::create(getenv('BASE_DIR'));
+$dotenv->load();
+
 $appSettings = include __DIR__.'/../../src/config/settings.php';
 
 return [
