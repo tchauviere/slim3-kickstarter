@@ -15,7 +15,14 @@ use Commands\Asset\CompileCommand;
 
 use Commands\Secret\GenerateSecretCommand;
 
+use Commands\Initialization\InitializationCommand;
+
 $application = new Application();
+
+/*
+ * Initialization command
+ */
+$application->add(new InitializationCommand());
 
 /*
  * Migration commands
