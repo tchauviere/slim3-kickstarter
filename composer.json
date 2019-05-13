@@ -2,7 +2,7 @@
     "name": "tchauviere/slim3-kickstarter",
     "description": "Slim3 web app starter kit, trying to follow KISS principle and make your dev life easier.",
     "keywords": ["Slim3", "Boilerplate", "Twig", "Monolog", "Eloquent", "Phinx", "SCSS", "jQuery"],
-    "homepage": "https://github.com/tchauviere/slim3-boilerplate",
+    "homepage": "https://github.com/tchauviere/slim3-kickstarter",
     "type": "project",
     "license": "BSD-3-Clause",
     "authors": [
