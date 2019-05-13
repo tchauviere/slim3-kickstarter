@@ -1,4 +1,4 @@
-# Slim3 Boilerplate
+# Slim3 Kickstarter
 [![Latest Stable Version](https://poser.pugx.org/tchauviere/slim3-kickstarter/v/stable)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
 [![Latest Unstable Version](https://poser.pugx.org/tchauviere/slim3-kickstarter/v/unstable)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
 [![License](https://poser.pugx.org/tchauviere/slim3-kickstarter/license)](https://packagist.org/packages/tchauviere/slim3-kickstarter)
@@ -20,12 +20,12 @@ It is composed of many great packages such as:
   - matthiasmullie/minify
   - vlucas/phpdotenv
 
-## Guide
-
-### Create project
+## Installation
 
 `composer create-project --no-interaction tchauviere/slim3-kickstarter <app_name>` :
 Will download the project and install everything for you where `<app_name>` is up to you ;)
+
+## Guide
 
 ### Assets management
 
