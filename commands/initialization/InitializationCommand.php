@@ -54,22 +54,22 @@ class InitializationCommand extends Command
                 'user_input' => ''
             ],
             'APP_LANG_PATH' => [
-                'default' => $basePath.'/lang',
+                'default' => $basePath.DIRECTORY_SEPARATOR.'lang',
                 'question' => 'Your language directory path :',
                 'user_input' => ''
             ],
             'APP_UPLOADED_FILE_DIRECTORY' => [
-                'default' => $basePath.'/uploads',
+                'default' => $basePath.DIRECTORY_SEPARATOR.'uploads',
                 'question' => 'Your uploaded files directory path :',
                 'user_input' => ''
             ],
             'TWIG_TPL_PATH' => [
-                'default' => $basePath.'/templates',
+                'default' => $basePath.DIRECTORY_SEPARATOR.'templates',
                 'question' => 'Your twig templates path :',
                 'user_input' => ''
             ],
             'TWIG_CACHE_PATH' => [
-                'default' => $basePath.'/cache',
+                'default' => $basePath.DIRECTORY_SEPARATOR.'cache',
                 'question' => 'Your twig cache directory path :',
                 'user_input' => ''
             ],
@@ -79,7 +79,7 @@ class InitializationCommand extends Command
                 'user_input' => ''
             ],
             'MONOLOG_PATH' => [
-                'default' => $basePath.'/logs/app.log',
+                'default' => $basePath.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'app.log',
                 'question' => 'Monolog path to log file :',
                 'user_input' => ''
             ],
