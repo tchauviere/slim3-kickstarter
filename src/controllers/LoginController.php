@@ -63,7 +63,6 @@ class LoginController extends BaseController
                 $recovery->forceDelete();
                 return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                     'new_password' => 'false',
-                    'test' => 'outdated_on_actual_reset',
                 ]));
             }
 
@@ -87,13 +86,15 @@ class LoginController extends BaseController
             $user->password = sha1($this->container->get('settings')['secret'].$newPassword);
             $user->saveOrFail();
 
+            // Remove old recovery not usable anymore
+            $recovery->forceDelete();
+
             return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                 'new_password' => 'true',
             ]));
         } catch (\Exception $e) {
             return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                 'new_password' => 'false',
-                'test' => 'execption_on_actual_reset',
             ]));
         }
     }
@@ -108,7 +109,6 @@ class LoginController extends BaseController
                 $recovery->forceDelete();
                 return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                     'new_password' => 'false',
-                    'test' => 'outdated',
                 ]));
             }
 
@@ -125,7 +125,6 @@ class LoginController extends BaseController
         } catch (\Exception $e) {
             return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                 'new_password' => 'false',
-                'test' => 'execption',
             ]));
         }
 
