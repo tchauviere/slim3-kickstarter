@@ -7,32 +7,23 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\ProgressBar;
+
+use Composer\Script\Event;
 
 class InitializationCommand extends Command
 {
     protected $commandName = 'project:init';
     protected $commandDescription = "Initialize easily your new project";
 
-    protected function configure()
+    protected $envFileValues;
+    protected $basePath;
+
+    public function __construct(string $name = null)
     {
-        $this
-            ->setName($this->commandName)
-            ->setDescription($this->commandDescription);
-    }
+        parent::__construct($name);
 
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        $basePath = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
-        $formatter = $this->getHelper('formatter');
-
-        $formattedLine = $formatter->formatSection(
-            'Initialization',
-            "\n".'<comment>Welcome to the app initialization.'."\n".'We will ask you a bunch of question in order to get you coding quicker.</comment>'."\n"
-        );
-        $output->writeln("\n".$formattedLine."\n");
-
-        $envFileValues = [
+        $this->basePath = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
+        $this->envFileValues = [
             'SLIM3_MODE' => [
                 'default' => 'dev',
                 'question' => 'Which mode would you like to run ?',
@@ -42,7 +33,7 @@ class InitializationCommand extends Command
                 'default' => 'true',
                 'question' => 'Access to route from middlewares ?',
                 'user_input' => ''
-                    ],
+            ],
             'SLIM3_ADD_CONTENT_LENGTH_HEADER' => [
                 'default' => 'true',
                 'question' => 'Add content length to response header ?',
@@ -54,22 +45,22 @@ class InitializationCommand extends Command
                 'user_input' => ''
             ],
             'APP_LANG_PATH' => [
-                'default' => $basePath.DIRECTORY_SEPARATOR.'lang',
+                'default' => $this->basePath.DIRECTORY_SEPARATOR.'lang',
                 'question' => 'Your language directory path :',
                 'user_input' => ''
             ],
             'APP_UPLOADED_FILE_DIRECTORY' => [
-                'default' => $basePath.DIRECTORY_SEPARATOR.'uploads',
+                'default' => $this->basePath.DIRECTORY_SEPARATOR.'uploads',
                 'question' => 'Your uploaded files directory path :',
                 'user_input' => ''
             ],
             'TWIG_TPL_PATH' => [
-                'default' => $basePath.DIRECTORY_SEPARATOR.'templates',
+                'default' => $this->basePath.DIRECTORY_SEPARATOR.'templates',
                 'question' => 'Your twig templates path :',
                 'user_input' => ''
             ],
             'TWIG_CACHE_PATH' => [
-                'default' => $basePath.DIRECTORY_SEPARATOR.'cache',
+                'default' => $this->basePath.DIRECTORY_SEPARATOR.'cache',
                 'question' => 'Your twig cache directory path :',
                 'user_input' => ''
             ],
@@ -79,7 +70,7 @@ class InitializationCommand extends Command
                 'user_input' => ''
             ],
             'MONOLOG_PATH' => [
-                'default' => $basePath.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'app.log',
+                'default' => $this->basePath.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'app.log',
                 'question' => 'Monolog path to log file :',
                 'user_input' => ''
             ],
@@ -172,18 +163,43 @@ class InitializationCommand extends Command
             ],
         ];
 
-        $helper = $this->getHelper('question');
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName($this->commandName)
+            ->setDescription($this->commandDescription);
+    }
+
+    public static function composerPostInstall(Event $event)
+    {
+        $io = $event->getIO();
+        $initializationCommand = new self();
+        $envFileValues = $initializationCommand->envFileValues;
+        $basePath = $initializationCommand->basePath;
+        $colors = new Colors();
+
+        echo "\n\n".$colors->getColoredString('Initialization', 'green')."\n";
+        echo $colors->getColoredString('Welcome to the app initialization', 'brown')."\n";
+        echo $colors->getColoredString('We will ask you a bunch of question in order to get you coding quicker', 'brown')."\n\n\n";
 
         foreach ($envFileValues as $keyEnv => &$envFileValue) {
-            $question = new Question($envFileValue['question'].'[<question>'.$envFileValue['default'].'</question>] : ', $envFileValue['default']);
+            $question = $envFileValue['question'].'['.$colors->getColoredString($envFileValue['default'], 'black', 'cyan').'] : ';
             if (isset($envFileValue['setHidden'])) {
-                $question->setHidden(true);
+                $envFileValue['user_input'] = $io->askAndHideAnswer($question);
+
+                if (!$envFileValue['user_input']) {
+                    $envFileValue['user_input'] = $envFileValue['default'];
+                }
+            } else {
+                $envFileValue['user_input'] = $io->ask($question, $envFileValue['default']);
             }
-            $envFileValue['user_input'] = $helper->ask($input, $output, $question);
+
             if (stripos($envFileValue['user_input'], $basePath) !== false) {
                 $envFileValue['user_input'] = str_replace($basePath, '${BASE_DIR}', $envFileValue['user_input']);
             }
-            $output->writeln('  -> <comment>'.$keyEnv.'</comment>=<info>'.$envFileValue['user_input'].'</info>');
+            echo '  -> '.$colors->getColoredString($keyEnv, 'brown').'='.$colors->getColoredString($envFileValue['user_input'], 'green')."\n";
         }
 
         $envFileContent = '';
@@ -192,5 +208,100 @@ class InitializationCommand extends Command
         }
 
         file_put_contents($basePath.DIRECTORY_SEPARATOR.'.env', $envFileContent);
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $formatter = $this->getHelper('formatter');
+
+        $formattedLine = $formatter->formatSection(
+            'Initialization',
+            "\n".'<comment>Welcome to the app initialization.'."\n".'We will ask you a bunch of question in order to get you coding quicker.</comment>'."\n"
+        );
+        $output->writeln("\n".$formattedLine."\n");
+
+        $helper = $this->getHelper('question');
+
+        foreach ($this->envFileValues as $keyEnv => &$envFileValue) {
+            $question = new Question($envFileValue['question'].'[<question>'.$envFileValue['default'].'</question>] : ', $envFileValue['default']);
+            if (isset($envFileValue['setHidden'])) {
+                $question->setHidden(true);
+            }
+            $envFileValue['user_input'] = $helper->ask($input, $output, $question);
+            if (stripos($envFileValue['user_input'], $this->basePath) !== false) {
+                $envFileValue['user_input'] = str_replace($this->basePath, '${BASE_DIR}', $envFileValue['user_input']);
+            }
+            $output->writeln('  -> <comment>'.$keyEnv.'</comment>=<info>'.$envFileValue['user_input'].'</info>');
+        }
+
+        $envFileContent = '';
+        foreach ($this->envFileValues as $keyEnv => $envValue) {
+            $envFileContent .= $keyEnv.'='.$envValue['user_input']."\n";
+        }
+
+        file_put_contents($this->basePath.DIRECTORY_SEPARATOR.'.env', $envFileContent);
+    }
+}
+
+class Colors {
+    private $foreground_colors = array();
+    private $background_colors = array();
+
+    public function __construct() {
+        // Set up shell colors
+        $this->foreground_colors['black'] = '0;30';
+        $this->foreground_colors['dark_gray'] = '1;30';
+        $this->foreground_colors['blue'] = '0;34';
+        $this->foreground_colors['light_blue'] = '1;34';
+        $this->foreground_colors['green'] = '0;32';
+        $this->foreground_colors['light_green'] = '1;32';
+        $this->foreground_colors['cyan'] = '0;36';
+        $this->foreground_colors['light_cyan'] = '1;36';
+        $this->foreground_colors['red'] = '0;31';
+        $this->foreground_colors['light_red'] = '1;31';
+        $this->foreground_colors['purple'] = '0;35';
+        $this->foreground_colors['light_purple'] = '1;35';
+        $this->foreground_colors['brown'] = '0;33';
+        $this->foreground_colors['yellow'] = '1;33';
+        $this->foreground_colors['light_gray'] = '0;37';
+        $this->foreground_colors['white'] = '1;37';
+
+        $this->background_colors['black'] = '40';
+        $this->background_colors['red'] = '41';
+        $this->background_colors['green'] = '42';
+        $this->background_colors['yellow'] = '43';
+        $this->background_colors['blue'] = '44';
+        $this->background_colors['magenta'] = '45';
+        $this->background_colors['cyan'] = '46';
+        $this->background_colors['light_gray'] = '47';
+    }
+
+    // Returns colored string
+    public function getColoredString($string, $foreground_color = null, $background_color = null) {
+        $colored_string = "";
+
+        // Check if given foreground color found
+        if (isset($this->foreground_colors[$foreground_color])) {
+            $colored_string .= "\033[" . $this->foreground_colors[$foreground_color] . "m";
+        }
+        // Check if given background color found
+        if (isset($this->background_colors[$background_color])) {
+            $colored_string .= "\033[" . $this->background_colors[$background_color] . "m";
+        }
+
+        // Add string and end coloring
+        $colored_string .=  $string . "\033[0m";
+
+        return $colored_string;
+    }
+
+    // Returns all foreground color names
+    public function getForegroundColors() {
+        return array_keys($this->foreground_colors);
+    }
+
+    // Returns all background color names
+    public function getBackgroundColors() {
+        return array_keys($this->background_colors);
     }
 }
