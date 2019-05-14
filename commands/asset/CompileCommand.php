@@ -22,7 +22,7 @@ class CompileCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $commandResult = shell_exec("php ./assets/compile");
+        $commandResult = shell_exec("php ./assets/compile --ansi");
 
         $output->writeln($commandResult);
     }
