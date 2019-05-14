@@ -67,7 +67,7 @@ class RunMigrationCommand extends Command
                 $migrateUpCmd .= " --dry-run";
             }
 
-            $commandResult = shell_exec($migrateUpCmd);
+            $commandResult = shell_exec($migrateUpCmd." --ansi");
         } else {
             $migrateDownCmd = "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phinx rollback -c db/config/config.php -e db";
 
@@ -81,7 +81,7 @@ class RunMigrationCommand extends Command
                 $migrateDownCmd .= " --dry-run";
             }
 
-            $commandResult = shell_exec($migrateDownCmd);
+            $commandResult = shell_exec($migrateDownCmd." --ansi");
         }
 
         $output->writeln($commandResult);

@@ -41,7 +41,7 @@ class RunSeedCommand extends Command
             $runSeedCmd .= " -s $seedName";
         }
 
-        $commandResult = shell_exec($runSeedCmd);
+        $commandResult = shell_exec($runSeedCmd." --ansi");
 
         $output->writeln($commandResult);
     }

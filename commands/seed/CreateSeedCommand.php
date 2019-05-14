@@ -31,7 +31,7 @@ class CreateSeedCommand extends Command
     {
         $name = $input->getArgument($this->commandArgumentName);
 
-        $commandResult = shell_exec("vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phinx seed:create $name -c db/config/config.php");
+        $commandResult = shell_exec("vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phinx seed:create $name -c db/config/config.php --ansi");
 
         $output->writeln($commandResult);
     }
