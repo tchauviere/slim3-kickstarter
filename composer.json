@@ -45,7 +45,7 @@
     "scripts": {
         "start": "php -S localhost:8080 -t public",
         "post-install-cmd": [
-            "./manager project:init"
+            "Commands\\Initialization\\InitializationCommand::composerPostInstall"
         ]
     }
 
