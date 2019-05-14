@@ -22,11 +22,13 @@ It is composed of many great packages such as:
 
 ## Installation :
 
-`composer create-project --no-interaction tchauviere/slim3-kickstarter <app_name>` 
+`composer create-project tchauviere/slim3-kickstarter <app_name>` 
 <br>
 Will download the project and install everything for you, `<app_name>` is up to you.
 
-*Once packages are installed you will be prompted interactively for `.env` file creation.*
+*Once packages are installed you will be prompted interactively for `.env` file creation. 
+<br>
+<strong>If you do not want to be prompted just add</strong> `--no-interaction`<strong> to the</strong> `composer create-project`<strong> command up above</strong>*
 
 Once that done, just run the following commands to create and populate initial database :
 <br>
