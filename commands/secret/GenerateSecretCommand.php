@@ -20,9 +20,12 @@ class GenerateSecretCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $settingsContent = file_get_contents(__DIR__.'/../../src/config/settings.php');
-        $newSecret = "'".sha1(time().random_bytes(12))."'";
-        $re = '/(?<=\'secret\' => )(.*)(?=,)/m';
+        $settingsContent = file_get_contents(__DIR__.'/../../.env');
+        if (!$settingsContent) {
+            throw new \Exception("No .env file found !");
+        }
+        $newSecret = sha1(time().random_bytes(12));
+        $re = '/(?<=APP_SECRET=)(.*)/';
         $newSettingsContent = preg_replace($re, $newSecret, $settingsContent);
 
         if (is_null($newSettingsContent) || $newSettingsContent == $settingsContent) {
@@ -30,11 +33,11 @@ class GenerateSecretCommand extends Command
             exit;
         }
 
-        if (!file_put_contents(__DIR__.'/../../src/config/settings.php', $newSettingsContent)) {
+        if (!file_put_contents(__DIR__.'/../../.env', $newSettingsContent)) {
             $output->writeln("We were unable write into your 'settings.php' file !");
             exit;
         }
 
-        $output->writeln("New secret generated succesfully ! $newSecret");
+        $output->writeln("New secret generated succesfully ! \n => '$newSecret'");
     }
 }
