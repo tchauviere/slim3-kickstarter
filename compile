@@ -3,6 +3,15 @@
 
 require _DIR_.'/../vendor/autoload.php';
 
+
+$globDir = __DIR__ . '/scss/*.scss';
+$outputDir = __DIR__ . '/../public/css/';
+foreach (glob($globDir) as $sassFile) {
+
+}
+
+
+die ('end');
 try {
     echo "\n\n ********************************************** \n\n";
     echo "Start SCSS compilation to .min.css files .... \n";

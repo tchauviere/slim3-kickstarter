@@ -3,6 +3,11 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+// Load environment
+putenv('BASE_DIR='.realpath(__DIR__));
+$dotenv = \Dotenv\Dotenv::create(getenv('BASE_DIR'));
+$dotenv->load();
+
 use Symfony\Component\Console\Application;
 
 use Commands\Migration\CreateMigrationCommand;
