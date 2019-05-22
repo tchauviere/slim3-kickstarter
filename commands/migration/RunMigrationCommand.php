@@ -17,7 +17,7 @@ class RunMigrationCommand extends Command
     protected $commandArgumentDirectionDescription = "Select migration 'up' or 'down' depending of what you want";
 
     protected $commandArgumentTarget = "target";
-    protected $commandArgumentTargetDescription = "Select target timestamp, migration will stop to this timestamp, if none all migrations will be played";
+    protected $commandArgumentTargetDescription = "(Optional) Select target timestamp, migration will stop to this timestamp, if none all migrations will be played";
 
     protected $commandOptionDryRun = "dry-run";
     protected $commandOptionDryRunDescription = "If specified, migration will be tested but not persisted into DB";
