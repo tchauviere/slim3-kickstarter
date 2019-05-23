@@ -26,11 +26,13 @@ It is composed of many great packages such as:
 <br>
 Will download the project and install everything for you, `<app_name>` is up to you.
 
-*Once packages are installed you will be prompted interactively for `.env` file creation. 
+*Once packages are installed you will be prompted interactively for `.env` file creation and global environment setup (assets and DB). 
 <br>
 <strong>If you do not want to be prompted just add</strong> `--no-interaction`<strong> to the</strong> `composer create-project`<strong> command up above</strong>*
 
-Once that done, just run the following commands to create and populate initial database :
+If you don't go with interactive mode (default), please mind to do the following once your .env file is ready:
+<br>
+`php manager asset:compile`
 <br>
 `php manager migration:run up`
 <br>
@@ -42,11 +44,14 @@ Start your developpement :)
 
 ### Assets management
 
-`php manager assets:compile`
+`php manager assets:compile [<type>] [--watch]`
 <br><br>
 Will take care of converting your `scss` files and minify them as well as `js` files from `/assets` directory
 to respectively `/public/css` and `/public/js` directories 
 (no binary dependencies required).
+
+- `[<type>]` (optionnal): `scss` or `js` (Tell compilator to only take care of `assets/js` or `assets/css`
+- `[--watch]` (optionnal): Watch specified folder and auto-compile whenever a change is made
 
 ### Migration creation
 
@@ -85,7 +90,7 @@ Run your seeds files.
 ### Secret generation
 `php manager secret:generate`
 <br><br>
-Will replace your secret located in `/src/config/settings.php` automatically.
+Will replace your secret located in `.env` file automatically.
 <br> 
 <strong>BE CAREFUL</strong> when using this if you have already users that are created.
 Indeed, this secret is used to salt your Users passwords.
