@@ -5,4 +5,8 @@
 /cache/*
 !/cache/.gitkeep
 !/logs/.gitkeep
+/public/js/*
+!/public/js/.gitkeep
+/public/css/*
+!/public/css/.gitkeep
 .env
