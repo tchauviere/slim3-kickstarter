@@ -215,8 +215,8 @@ class CompileCommand extends Command
     {
         $files = array_filter(glob($pattern), 'is_file');
 
-        foreach (glob(dirname($pattern).'/*') as $dir) {
-            $files = array_merge($files, $this->globRecursive($dir.'/'.basename($pattern)));
+        foreach (glob(dirname($pattern).DIRECTORY_SEPARATOR.'*') as $dir) {
+            $files = array_merge($files, $this->globRecursive($dir.DIRECTORY_SEPARATOR.basename($pattern)));
         }
         return $files;
     }
