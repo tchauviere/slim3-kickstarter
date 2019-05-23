@@ -208,6 +208,48 @@ class InitializationCommand extends Command
         }
 
         file_put_contents($basePath.DIRECTORY_SEPARATOR.'.env', $envFileContent);
+
+        echo "\n".$colors->getColoredString('*********************', 'brown')."\n";
+        echo $colors->getColoredString('ASSETS COMPILATION', 'green')."\n";
+        echo $colors->getColoredString('*********************', 'brown')."\n";
+
+        // Execute assets dump
+        passthru("php manager asset:compile --ansi");
+
+        try {
+            echo "\n".$colors->getColoredString('*********************', 'brown')."\n";
+            echo $colors->getColoredString('MIGRATION RUN', 'green')."\n";
+            echo $colors->getColoredString('*********************', 'brown')."\n";
+            $dbh = new \PDO(
+                'mysql:host='.getenv('DB_HOST').':'.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'),
+                getenv('DB_USERNAME'),
+                getenv('DB_PASSWORD')
+            );
+
+
+            // Run migration
+            passthru("php manager migration:run up --ansi");
+
+            // Run seeding
+            passthru("php manager seed:run --ansi");
+
+        } catch (\PDOException $ex) {
+            $expLenght = strlen($ex->getMessage());
+            $msg = 'UNABLE TO CONNECT TO YOUR DATABASE';
+            $msgLenght = strlen($msg);
+            $spaceLenght =  $expLenght - $msgLenght;
+
+            echo $colors->getColoredString("\n".str_repeat('*', $expLenght), 'black', 'red');
+            echo $colors->getColoredString("\n".$msg.str_repeat(' ', $spaceLenght), 'black', 'red');
+            echo $colors->getColoredString("\n".$ex->getMessage(), 'black', 'red');
+            echo $colors->getColoredString("\n".str_repeat('*', $expLenght), 'black', 'red');
+
+
+            echo $colors->getColoredString("\n\nMind to change your .env file regarding DB", 'brown');
+            echo $colors->getColoredString("\nThen execute consenquently ./manager migration:run up and ./manager seed:run", 'brown');
+        }
+
+        echo $colors->getColoredString("\n\nInitialization OK !\n", 'green');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -240,6 +282,53 @@ class InitializationCommand extends Command
         }
 
         file_put_contents($this->basePath.DIRECTORY_SEPARATOR.'.env', $envFileContent);
+
+        $output->writeln('  -> <comment>'.$keyEnv.'</comment>=<info>'.$envFileValue['user_input'].'</info>');
+
+        $output->writeln("\n<comment>*********************</comment>");
+        $output->writeln("<info>ASSETS COMPILATION</info>");
+        $output->writeln("<comment>*********************</comment>\n");
+
+        // Execute assets dump
+        passthru("php manager asset:compile --ansi");
+
+
+        try {
+            $output->writeln("\n<comment>*********************</comment>");
+            $output->writeln("<info>MIGRATION RUN</info>");
+            $output->writeln("<comment>*********************</comment>\n");
+            $dbh = new \PDO(
+                'mysql:host='.getenv('DB_HOST').':'.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'),
+                getenv('DB_USERNAME'),
+                getenv('DB_PASSWORD')
+            );
+
+
+            // Run migration
+            passthru("php manager migration:run up --ansi");
+
+            // Run seeding
+            passthru("php manager seed:run --ansi");
+
+        } catch (\PDOException $ex) {
+            $expLenght = strlen($ex->getMessage());
+            $msg = 'UNABLE TO CONNECT TO YOUR DATABASE';
+            $msgLenght = strlen($msg);
+            $spaceLenght =  $expLenght - $msgLenght;
+
+            $output->writeln("\n<fg=black;bg=red>".str_repeat('*', $expLenght)."</>");
+            $output->writeln("<fg=black;bg=red>UNABLE TO CONNECT TO YOUR DATABASE".str_repeat(' ', $spaceLenght)."</>");
+            $output->writeln("<fg=black;bg=red>".$ex->getMessage()."</>");
+            $output->writeln("<fg=black;bg=red>".str_repeat('*', $expLenght)."</>\n");
+
+
+            $output->writeln("<comment>Mind to change your .env file regarding DB</comment>");
+            $output->writeln("<comment>Then execute consenquently ./manager migration:run up and ./manager seed:run</comment>\n");
+        }
+
+
+        $output->writeln("<info>Initialization OK !</info>");
+
     }
 }
 
