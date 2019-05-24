@@ -9,6 +9,7 @@
 
 namespace Controllers;
 
+use Carbon\Carbon;
 use Models\Recovery;
 use Models\User;
 use Slim\Http\Request;
@@ -57,7 +58,7 @@ class LoginController extends BaseController
 
             // Add five minutes in case user started recovery procedure at the limit expires date
             // and take a bit of time to fill out recovery form
-            $now = date('Y-m-d H:i:s', strtotime("+5 minutes"));
+            $now = Carbon::now()->addMinutes(5);
 
             if (strtotime($recovery->expires_at) < $now) {
                 $recovery->forceDelete();
@@ -155,7 +156,7 @@ class LoginController extends BaseController
             $recovery = new Recovery();
             $recovery->user_id = $user->id;
             $recovery->token = sha1(time().$user->email.$this->container->get('settings')['secret']);
-            $recovery->expires_at = date('Y-m-d H:i:s', strtotime("+30 min"));
+            $recovery->expires_at = Carbon::now()->addMinutes(30);
             $recovery->saveOrFail();
 
             $recoveryURL = $request->getUri()->getScheme().'://'.$request->getUri()->getHost();
