@@ -10,10 +10,18 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Slim\Router;
 
 class BaseMiddleware
 {
+    /**
+     * @var Twig
+     */
     protected $twig;
+    /**
+     * @var Router
+     */
     protected $router;
 
     public function __construct(ContainerInterface $container) {

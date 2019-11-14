@@ -98,7 +98,7 @@ $container['translator'] = function ($c) {
 };
 
 $container['eloquent'] = function($c) {
-    $capsule = new Manager;
+    $capsule = new Manager();
     $capsule->addConnection($c->get('settings')['db']);
     $capsule->setAsGlobal();
     $capsule->bootEloquent();
