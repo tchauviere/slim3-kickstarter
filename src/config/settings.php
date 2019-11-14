@@ -1,4 +1,10 @@
 <?php
+ /*
+  * /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\
+  * Should not be touched unless we add a new variable entry to .env
+  * and you want it to be accessible from any controller
+  * /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\
+  */
 return [
     'settings' => [
 
