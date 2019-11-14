@@ -1,6 +1,10 @@
 <?php
 
-// Routes Loading
-foreach (glob(__DIR__ . '/../routers/*.php') as $router) {
-    include $router;
+$di = new RecursiveDirectoryIterator(__DIR__ . '/../routers',RecursiveDirectoryIterator::SKIP_DOTS);
+$it = new RecursiveIteratorIterator($di);
+
+foreach($it as $router) {
+    if (pathinfo($router,PATHINFO_EXTENSION) == "php") {
+        include $router;
+    }
 }
