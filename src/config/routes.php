@@ -1,6 +1,6 @@
 <?php
 
-$di = new RecursiveDirectoryIterator(__DIR__ . '/../routers',RecursiveDirectoryIterator::SKIP_DOTS);
+$di = new RecursiveDirectoryIterator(getenv('ROUTER_DIR'),RecursiveDirectoryIterator::SKIP_DOTS);
 $it = new RecursiveIteratorIterator($di);
 
 foreach($it as $router) {

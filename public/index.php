@@ -16,6 +16,7 @@ try {
 
     // Load environment
     putenv('BASE_DIR='.realpath(__DIR__.'/../'));
+    putenv('ROUTER_DIR='.realpath(__DIR__.'/../src/routers/'));
     $dotenv = \Dotenv\Dotenv::create(getenv('BASE_DIR'));
     $dotenv->load();
 
