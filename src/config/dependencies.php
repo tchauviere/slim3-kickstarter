@@ -59,7 +59,7 @@ $container['twig'] = function ($c) {
 $container['notFoundHandler'] = function ($c) {
     return function (Request $request, Response $response) use ($c) {
         $twig = $c->get('twig');
-        return $twig->render($response->withStatus(404), '404.twig', []);
+        return $twig->render($response->withStatus(404), 'core/404.twig', []);
     };
 };
 

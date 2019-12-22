@@ -7,10 +7,10 @@
  * Time:    12:20
  */
 
-use Controllers\DashboardController;
-use Middlewares\AuthMiddleware;
+use Controllers\Admin\DashboardController;
+use Middlewares\Admin\AuthMiddleware;
 
-$app->group('/dashboard', function () use ($app) {
+$app->group('/'.getenv('ADMIN_BASE_URI').'/dashboard', function () use ($app) {
    /*
     * Display routes
     */

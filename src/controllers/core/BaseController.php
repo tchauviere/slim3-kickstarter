@@ -7,9 +7,8 @@
  * Time:    12:54
  */
 
-namespace Controllers;
+namespace Controllers\Core;
 
-use Models\Connections;
 use Models\User;
 use Psr\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager;

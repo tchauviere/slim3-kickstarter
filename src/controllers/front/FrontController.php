@@ -7,12 +7,13 @@
  * Time:    12:41
  */
 
-namespace Controllers;
+namespace Controllers\Front;
 
+use Controllers\Core\BaseFrontController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class FrontController extends BaseController
+class FrontController extends BaseFrontController
 {
     public function getHome(Request $request, Response $response, $args) {
        try {

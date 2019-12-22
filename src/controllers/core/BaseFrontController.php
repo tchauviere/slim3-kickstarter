@@ -11,18 +11,10 @@ namespace Controllers\Core;
 
 use Psr\Container\ContainerInterface;
 
-class BaseAdminController extends BaseController
+class BaseFrontController extends BaseController
 {
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
     }
 
-    public function checkIsAdmin() {
-        $user = $this->getLoggedUser();
-
-        if ($user->role->name !== 'admin') {
-            header('Location: /');
-            exit;
-        }
-    }
 }

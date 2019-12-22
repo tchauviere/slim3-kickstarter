@@ -7,7 +7,7 @@
  * Time:    12:54
  */
 
-namespace Middlewares;
+namespace Middlewares\Core;
 
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;

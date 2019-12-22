@@ -7,14 +7,15 @@
  * Time:    14:41
  */
 
-namespace Controllers;
+namespace Controllers\Front;
 
+use Controllers\Core\BaseFrontController;
 use Models\Role;
 use Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class RegisterController extends BaseController
+class RegisterController extends BaseFrontController
 {
     public function getRegister(Request $request, Response $response, $args) {
         $tplData = [];
@@ -25,7 +26,7 @@ class RegisterController extends BaseController
             $tplData['errors'] = $flashes['errors'][0];
         }
 
-        return $this->twig->render($response, 'register.twig', $tplData);
+        return $this->twig->render($response, 'front/register.twig', $tplData);
     }
 
     private function validateRegisterRequest(Request $request) {

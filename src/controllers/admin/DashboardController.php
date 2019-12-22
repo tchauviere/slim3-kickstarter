@@ -7,9 +7,9 @@
  * Time:    12:41
  */
 
-namespace Controllers;
+namespace Controllers\Admin;
 
-use Models\User;
+use Controllers\Core\BaseAdminController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

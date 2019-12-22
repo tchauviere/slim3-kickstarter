@@ -7,8 +7,9 @@
  * Time:    12:54
  */
 
-namespace Middlewares;
+namespace Middlewares\Front;
 
+use Middlewares\Core\BaseMiddleware;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -26,18 +27,6 @@ class AuthMiddleware extends BaseMiddleware
      */
     public function __invoke(Request $request, Response $response, $next)
     {
-        if (!isset($_SESSION['user'])) {
-            // Unloggued user tries to access private section => Redirect to Login
-            $response = $response->withRedirect(
-                $this->router->pathFor('getLogin')
-            );
-        } else {
-            // Logged user tries to access private section => Allow access
-            $user = $_SESSION['user'];
-            $this->twig->offsetSet('current_user', $user);
-            $response = $next($request, $response);
-        }
-
-        return $response;
+        return $next($request, $response);
     }
 }

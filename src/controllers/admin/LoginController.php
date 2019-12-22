@@ -7,15 +7,16 @@
  * Time:    12:41
  */
 
-namespace Controllers;
+namespace Controllers\Admin;
 
 use Carbon\Carbon;
+use Controllers\Core\BaseAdminController;
 use Models\Recovery;
 use Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class LoginController extends BaseController
+class LoginController extends BaseAdminController
 {
     public function getLogin(Request $request, Response $response, $args) {
         $tplData = [];
@@ -30,7 +31,7 @@ class LoginController extends BaseController
             $tplData['login'] = $request->getParam('login');
         }
 
-        return $this->twig->render($response, 'login.twig', $tplData);
+        return $this->twig->render($response, 'admin/login.twig', $tplData);
     }
 
     public function postLogin(Request $request, Response $response, $args) {
@@ -121,7 +122,7 @@ class LoginController extends BaseController
                 $tplData['mismatch'] = true;
             }
 
-            return $this->twig->render($response, 'reset_password.twig', $tplData);
+            return $this->twig->render($response, 'admin/reset_password.twig', $tplData);
 
         } catch (\Exception $e) {
             return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
