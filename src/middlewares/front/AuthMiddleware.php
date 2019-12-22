@@ -27,6 +27,12 @@ class AuthMiddleware extends BaseMiddleware
      */
     public function __invoke(Request $request, Response $response, $next)
     {
-        return $next($request, $response);
+        if (isset($_SESSION['user'])) {
+            $user = $_SESSION['user'];
+            $this->twig->offsetSet('current_user', $user);
+            $response = $next($request, $response);
+        }
+
+        return $response;
     }
 }

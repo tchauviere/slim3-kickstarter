@@ -28,7 +28,7 @@ class AuthMiddleware extends BaseMiddleware
     public function __invoke(Request $request, Response $response, $next)
     {
         if (!isset($_SESSION['user'])) {
-            // Unloggued user tries to access private section => Redirect to Login
+            // Un-logged user tries to access private section => Redirect to Login
             $response = $response->withRedirect(
                 $this->router->pathFor('getLogin')
             );
