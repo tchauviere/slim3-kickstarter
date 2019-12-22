@@ -9,7 +9,7 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Controllers\Front\FrontController;
+use Controllers\Front\HomeController;
 use Middlewares\Front\AuthMiddleware;
 
 /*
@@ -17,7 +17,7 @@ use Middlewares\Front\AuthMiddleware;
  */
 $app->group('/', function () use ($app) {
 
-    $app->get('', FrontController::class . ':getHome')->setName('getHome');
+    $app->get('', HomeController::class . ':getHome')->setName('getHome');
 
     $app->get(getenv('ADMIN_BASE_URI'), function(Request $request, Response $response, $args) {
         if (isset($_SESSION['user'])) {

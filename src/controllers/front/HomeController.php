@@ -13,7 +13,7 @@ use Controllers\Core\BaseFrontController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class FrontController extends BaseFrontController
+class HomeController extends BaseFrontController
 {
     public function getHome(Request $request, Response $response, $args) {
         $tplData = [];
