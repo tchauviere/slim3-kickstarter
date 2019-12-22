@@ -27,7 +27,7 @@ try {
         $dotenv = \Dotenv\Dotenv::create(getenv('BASE_DIR'));
         $dotenv->load();
     } catch (Exception $e) {
-        throw new Exception('Unable to find .env file !', -999)
+        throw new Exception('Unable to find .env file !', -999);
     }
 
 
