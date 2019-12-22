@@ -16,6 +16,7 @@ use Symfony\Component\Translation\Translator;
 use Slim\Http\UploadedFile;
 use Slim\Views\Twig;
 use PHPMailer\PHPMailer\PHPMailer;
+use Slim\Flash\Messages;
 
 /**
  * Class BaseController
@@ -24,25 +25,39 @@ use PHPMailer\PHPMailer\PHPMailer;
 class BaseController
 {
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface $container
      */
     protected $container;
     /**
-     * @var Twig
+     * @var Twig $twig
      */
     protected $twig;
     /**
-     * @var Manager
+     * @var Manager $eloquent
      */
     protected $eloquent;
     /**
-     * @var Translator
+     * @var Translator $translator
      */
     protected $translator;
     /**
-     * @var PHPMailer
+     * @var PHPMailer $mailer
      */
     protected $mailer;
+    /**
+     * @var Messages $flash
+     */
+    protected $flash;
+
+    /**
+     * @var array $errors
+     */
+    protected $errors = [];
+    /**
+     * @var array $success
+     */
+    protected $success = [];
+
 
     /**
      * BaseController constructor.
@@ -55,6 +70,61 @@ class BaseController
         $this->eloquent = $container->get('eloquent');
         $this->translator = $container->get('translator');
         $this->mailer = $container->get('mailer');
+        $this->flash = $container->get('flash');
+
+        $flashes = $this->flash->getMessages();
+        if (isset($flashes['errors'])) {
+            $this->twig->offsetSet('errors', $flashes['errors'][0]);
+        }
+        if (isset($flashes['success'])) {
+            $this->twig->offsetSet('success', $flashes['success'][0]);
+        }
+    }
+
+    /**
+     * Add an error message in the "flash message" system
+     *
+     * @param string $message
+     */
+    protected function addErrorMessage($message) {
+        $this->errors[] = $message;
+    }
+
+    /**
+     * Add a success message in the "flash message" system
+     *
+     * @param string $message
+     */
+    protected function addSuccessMessage($message) {
+        $this->success[] = $message;
+    }
+
+    /**
+     * Return the number of errors in the flash message queue
+     *
+     * @return integer
+     */
+    protected function hasErrors() {
+        return count($this->errors);
+    }
+
+    /**
+     * Effectively add flash messages queue to flash system
+     */
+    protected function persistMessages() {
+        if (count($this->errors)) {
+            $this->flash->addMessage('errors', [
+                'title' => $this->translator->trans('error'),
+                'msgs' => $this->errors,
+            ]);
+        }
+
+        if (count($this->success)) {
+            $this->flash->addMessage('success', [
+                'title' => $this->translator->trans('success'),
+                'msgs' => $this->success,
+            ]);
+        }
     }
 
     /**
