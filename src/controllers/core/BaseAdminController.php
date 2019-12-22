@@ -17,11 +17,14 @@ class BaseAdminController extends BaseController
         parent::__construct($container);
     }
 
+    /**
+     * Check if logged user (if one) is an Admin from its Role, if not, redirect to /
+     */
     public function checkIsAdmin() {
         $user = $this->getLoggedUser();
 
         if ($user->role->name !== 'admin') {
-            header('Location: /');
+            header('HTTP/1.0 403 Forbidden');
             exit;
         }
     }
