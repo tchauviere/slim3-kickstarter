@@ -30,8 +30,9 @@ class AuthMiddleware extends BaseMiddleware
         if (isset($_SESSION['user'])) {
             $user = $_SESSION['user'];
             $this->twig->offsetSet('current_user', $user);
-            $response = $next($request, $response);
         }
+
+        $response = $next($request, $response);
 
         return $response;
     }

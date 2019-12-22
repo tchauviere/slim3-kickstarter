@@ -25,6 +25,7 @@ class BaseMiddleware
     protected $router;
 
     public function __construct(ContainerInterface $container) {
+
         $this->twig = $container->get('twig');
         $this->router = $container->get('router');
     }
