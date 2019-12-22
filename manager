@@ -3,10 +3,15 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+try {
 // Load environment
-putenv('BASE_DIR='.realpath(__DIR__));
-$dotenv = \Dotenv\Dotenv::create(getenv('BASE_DIR'));
-$dotenv->load();
+    putenv('BASE_DIR='.realpath(__DIR__));
+    $dotenv = \Dotenv\Dotenv::create(getenv('BASE_DIR'));
+    $dotenv->load();
+} catch (Exception $e) {
+    echo "\n\n\n\t /!\ Unable to load any .env file at the root of this project. Some commands may fail /!\ \n\n\n";
+}
+
 
 use Symfony\Component\Console\Application;
 

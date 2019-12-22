@@ -54,6 +54,11 @@ class InitializationCommand extends Command
                 'question' => 'Your uploaded files directory path :',
                 'user_input' => ''
             ],
+            'ADMIN_BASE_URI' => [
+                'default' => 'admin',
+                'question' => 'Which URI to use as base admin access ("/admin")',
+                'user_input' => ''
+            ],
             'TWIG_TPL_PATH' => [
                 'default' => $this->basePath.DIRECTORY_SEPARATOR.'templates',
                 'question' => 'Your twig templates path :',
