@@ -14,18 +14,19 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="{{ base_url() }}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ base_url() }}/css/front_global.min.css" rel="stylesheet">
     {% block css %}{% endblock %}
 </head>
 <body id="page-top">
+{% block top_navbar %}
+    {% include '_partials/front/top_navbar.twig' %}
+{% endblock %}
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column" style="margin-top: 60px;">
+    <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
         <div id="content">
-            {% block top_navbar %}
-                {% include '_partials/front/top_navbar.twig' %}
-            {% endblock %}
             <!-- Begin Page Content -->
             <div class="container-fluid">
                 {% block body %}{% endblock %}

@@ -57,11 +57,15 @@ class BaseController
     /**
      * @var array $errors
      */
-    protected $errors = [];
+    private $errors = [];
     /**
      * @var array $success
      */
-    protected $success = [];
+    private $success = [];
+    /**
+     * @var array $tpl_vars
+     */
+    protected $tpl_vars = [];
 
 
     /**

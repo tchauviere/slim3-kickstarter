@@ -21,7 +21,7 @@ class FrontController extends BaseFrontController
         try {
 
         } catch (\Exception $e) {
-           $this->logger->addError('FrontController::getHome "'.$e->getMessage().'" (CODE: "'.$e->getCode().'")');
+           $this->logger->addError('[Front]FrontController::getHome "'.$e->getMessage().'" (CODE: "'.$e->getCode().'")');
         }
 
         return $this->twig->render($response, 'front/home.twig', $tplData);
