@@ -17,6 +17,7 @@ use Slim\Http\UploadedFile;
 use Slim\Views\Twig;
 use PHPMailer\PHPMailer\PHPMailer;
 use Slim\Flash\Messages;
+use Monolog\Logger;
 
 /**
  * Class BaseController
@@ -48,6 +49,10 @@ class BaseController
      * @var Messages $flash
      */
     protected $flash;
+    /**
+     * @var Logger $logger
+     */
+    protected $logger;
 
     /**
      * @var array $errors
@@ -71,6 +76,7 @@ class BaseController
         $this->translator = $container->get('translator');
         $this->mailer = $container->get('mailer');
         $this->flash = $container->get('flash');
+        $this->logger = $container->get('monolog');
 
         $flashes = $this->flash->getMessages();
         if (isset($flashes['errors'])) {
