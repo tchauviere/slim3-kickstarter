@@ -16,11 +16,14 @@ use Slim\Http\Response;
 class FrontController extends BaseFrontController
 {
     public function getHome(Request $request, Response $response, $args) {
-       try {
-           $tplData = [];
+        $tplData = [];
 
-           return $this->twig->render($response, 'front/home.twig', $tplData);
-       } catch (\Exception $e) {
-       }
+        try {
+
+        } catch (\Exception $e) {
+           $this->logger->addError('FrontController::getHome "'.$e->getMessage().'" (CODE: "'.$e->getCode().'")');
+        }
+
+        return $this->twig->render($response, 'front/home.twig', $tplData);
     }
 }
