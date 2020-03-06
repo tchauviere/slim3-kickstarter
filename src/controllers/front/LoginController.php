@@ -31,15 +31,17 @@ class LoginController extends BaseAdminController
     public function postLogin(Request $request, Response $response, $args) {
         try {
             $user = User::where([
-                ['email', '=', $request->getParam('l_email')],
-                ['password', '=', sha1($this->container->get('settings')['secret'].$request->getParam('l_password'))],
+                ['email', '=', $request->getParam('email')],
+                ['password', '=', sha1($this->container->get('settings')['secret'].$request->getParam('password'))],
             ])->firstOrFail();
 
             // Save user in session, then redirect to dashboard
             $this->setLoggedUser($user);
 
-            return $response->withRedirect($this->container->get('router')->pathFor('getDashboard'));
+            return $response->withRedirect($this->container->get('router')->pathFor('getHome'));
         } catch (\Exception $e) {
+            $this->addErrorMessage($this->translator->trans('bad_credentials'));
+            $this->persistMessages();
             return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
                 'login' => 'false',
             ]));
