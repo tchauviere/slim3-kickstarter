@@ -19,6 +19,7 @@ It is composed of many great packages such as:
   - leafo/scssphp
   - matthiasmullie/minify
   - vlucas/phpdotenv
+  - zeuxisoo/slim-whoops
 
 ## Installation :
 
