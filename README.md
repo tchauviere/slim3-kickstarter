@@ -54,6 +54,12 @@ to respectively `/public/css` and `/public/js` directories
 - `[<type>]` (optionnal): `scss` or `js` (Tell compilator to only take care of `assets/js` or `assets/css`
 - `[--watch]` (optionnal): Watch specified folder and auto-compile whenever a change is made
 
+### Cache clear
+`php manager cache:clear`
+<br><br>
+Clear `/cache` folder
+
+
 ### Migration creation
 
 `php manager migration:create <migration_name>`
