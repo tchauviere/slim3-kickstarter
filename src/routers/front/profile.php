@@ -13,7 +13,7 @@ use Middlewares\Front\AuthMiddleware;
 /*
  * Actions routes
  */
-$app->group('/', function () use ($app) {
+$app->group('/profile', function () use ($app) {
 
     $app->get('', HomeController::class . ':getHome')->setName('getHome');
 
