@@ -38,6 +38,7 @@ class UsersAndRoles extends AbstractMigration
             ->addColumn('email', 'string', ['limit' => 100])
             ->addColumn('password', 'string', ['limit' => 100])
             ->addColumn('role_id', 'integer')
+            ->addColumn('is_active', 'integer')
             ->addColumn('created_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('updated_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->create();
