@@ -16,6 +16,11 @@ class Role extends Model
     protected $table = 'roles';
     protected $fillable = ['name', 'description'];
 
+
+    public static $SUPERADMIN = 1;
+    public static $ADMIN = 2;
+    public static $USER = 3;
+
     /**
      * Get the role record associated with the user.
      */

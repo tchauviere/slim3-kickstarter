@@ -7,6 +7,7 @@ use Slim\Http\Uri;
 use Slim\Http\Environment;
 use Slim\Views\TwigExtension;
 use Slim\Flash\Messages;
+use Slim\Container;
 // SF
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -25,9 +26,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 $container = $app->getContainer();
 // Remove default slim3 404 Handler
 unset($container['notFoundHandler']);
+// Remove default slim3 errorHandler
+unset($container['errorHandler']);
+
+
 
 // Twig template engine
-$container['twig'] = function ($c) {
+$container['twig'] = function (Container $c) {
     $twig = new \Slim\Views\Twig($c->get('settings')['twig']['tpl_path'], [
         'cache' => $c->get('settings')['mode'] == 'dev' ? false : $c->get('settings')['twig']['cache_path'],
         'debug' => $c->get('settings')['mode'] == 'dev' ? true : false,
@@ -56,14 +61,7 @@ $container['twig'] = function ($c) {
     return $twig;
 };
 
-$container['notFoundHandler'] = function ($c) {
-    return function (Request $request, Response $response) use ($c) {
-        $twig = $c->get('twig');
-        return $twig->render($response->withStatus(404), 'core/404.twig', []);
-    };
-};
-
-$container['mailer'] = function ($c) {
+$container['mailer'] = function (Container $c) {
     $settings = $c->get('settings')['mailer'];
 
     $mail = new PHPMailer();
@@ -80,7 +78,7 @@ $container['mailer'] = function ($c) {
     return $mail;
 };
 
-$container['translator'] = function ($c) {
+$container['translator'] = function (Container $c) {
     $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en_US';
 
     // First param is the "default language" to use.
@@ -97,7 +95,7 @@ $container['translator'] = function ($c) {
     return $translator;
 };
 
-$container['eloquent'] = function($c) {
+$container['eloquent'] = function(Container $c) {
     $capsule = new Manager();
     $capsule->addConnection($c->get('settings')['db']);
     $capsule->setAsGlobal();
@@ -110,11 +108,74 @@ $container['flash'] = function () {
     return new Messages();
 };
 
-$container['monolog'] = function ($c) {
+$container['monolog'] = function (Container $c) {
     $settings = $c->get('settings')['logger'];
     $logger = new Logger($settings['name']);
     $logger->pushProcessor(new UidProcessor());
     $logger->pushHandler(new StreamHandler($settings['path'], $settings['level']));
 
     return $logger;
+};
+
+$container['notFoundHandler'] = function (Container $c) {
+    return function (Request $request, Response $response) use ($c) {
+        $twig = $c->get('twig');
+        return $twig->render($response->withStatus(404), 'core/404.twig', []);
+    };
+};
+
+$container['errorHandler'] = function (Container $c) {
+
+    return function (Request $request, Response $response, \Exception $exception) use ($c) {
+        $logger = $c['monolog'];
+        $twig = $c->get('twig');
+        $finalTrace = [];
+
+        $logger->addError('[CORE]ERROR HANDLER EXCEPTION : "'.$exception->getMessage().'" (CODE: "'.$exception->getCode().'")');
+        $debugBacktrace = $exception->getTrace();
+
+
+        foreach ($debugBacktrace as $trace) {
+            $file = 'FILE => ';
+            $line = 'LINE => ';
+            $class = 'CLASS => ';
+            $function = 'FUNCTION => ';
+
+            if (isset($trace['file'])) {
+                $file .= '<i>'.$trace['file'].'</i>';
+            } else {
+                $file .= '';
+            }
+            if (isset($trace['line'])) {
+                $line .= '<b>'.$trace['line'].'</b>';
+            } else {
+                $line .= '';
+            }
+            if (isset($trace['class'])) {
+                $class .= $trace['class'];
+            } else {
+                $class .= '';
+            }
+            if (isset($trace['function'])) {
+                $function .= '<i>'.$trace['function'].'</i>';
+            } else {
+                $function .= '';
+            }
+
+            $finalTrace[] = '<li>'.$file.'<br/>'.$line.'<br/>'.$class.'<br/>'.$function.'<br/></li>';
+        }
+
+
+        return $response->write($exception->getMessage());
+
+       /* return $twig->render($response->withStatus(500), 'core/500.twig', [
+            'env' => getenv('SLIM3_MODE'),
+            'exception' => [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage()
+            ],
+            'trace' => $finalTrace
+        ]);*/
+    };
+
 };

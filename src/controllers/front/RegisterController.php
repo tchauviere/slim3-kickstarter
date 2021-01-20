@@ -99,6 +99,10 @@ class RegisterController extends BaseFrontController
 
                 $user->saveOrFail();
 
+                $user->role  = User::where([
+                                              ['email', '=', $user->email],
+                                          ])->with('role')->firstOrFail();
+
                 // Save user in session, then redirect to dashboard
                 $this->setLoggedUser($user);
 

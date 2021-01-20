@@ -69,5 +69,5 @@ return array(
     'reset_password_mismatch' => 'Les mots de passe ne sont pas identiques !',
     'new_password_success' => 'Vous avez modifié votre mot de passe avec succès. Vous pouvez vous connecter avec celui-ci dès maintenant.',
     'new_password_failed' => 'Une erreur est survenue lors de votre réinitialisation de mot de passe',
-    'email_team_signature' => 'L\'équipe'
+    'email_team_signature' => 'L\'équipe',
 );

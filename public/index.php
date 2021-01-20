@@ -1,8 +1,6 @@
 <?php
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Monolog\Processor\UidProcessor;
+use Middlewares\Core\BaseMiddleware;
 
 try {
     if (PHP_SAPI == 'cli-server') {
@@ -30,7 +28,6 @@ try {
         throw new Exception('Unable to find .env file !', -999);
     }
 
-
     // Instantiate the app
     $settings = require __DIR__ . '/../src/config/settings.php';
     $app = new \Slim\App($settings);
@@ -41,26 +38,28 @@ try {
     // Register routes
     require __DIR__ . '/../src/config/routes.php';
 
+    // Add Error Handler Middleware at application level
+    $app->add(BaseMiddleware::class);
     // Run app
     $app->run();
+
 } catch (Exception $e) {
 
     if (strtolower(getenv('SLIM3_MODE')) === 'dev') {
-        var_dump($e->getMessage());
-        var_dump($e->getTrace());
-        exit;
+        echo '<h1>Mode Dev Error Display:</h1>';
+        echo '<p>Message:</p>';
+        echo '<pre>';
+            var_dump($e->getMessage());
+        echo '</pre>';
+        echo '<p>Trace:</p>';
+        echo '<pre>';
+            var_dump($e->getTrace());
+        echo '</pre>';
+        echo '<pre>';
+
     }
 
-    // If error is concerning missing .env, we couldnot add log anyway because logger needs it to be set up.
-    if ($e->getCode() != -999) {
-        $settingLogger = $settings['logger'];
-        $logger = new Logger($settingLogger['name']);
-        $logger->pushProcessor(new UidProcessor());
-        $logger->pushHandler(new StreamHandler($settingLogger['path'], $settingLogger['level']));
-        $logger->addError('INDEX.PHP (Entry Point) : "'.$e->getMessage().'" (CODE : "'.$e->getCode().'")');
-    }
-
-    // Force browser to display 500 Error
-    throw new Exception('500');
+    // Return 500 code
+    http_response_code(500);
 }
 

@@ -19,14 +19,6 @@ $app->group('/', function () use ($app) {
 
     $app->get('', HomeController::class . ':getHome')->setName('getHome');
 
-    $app->get(getenv('ADMIN_BASE_URI'), function(Request $request, Response $response, $args) {
-        if (isset($_SESSION['user'])) {
-            return $response->withRedirect($this->get('router')->pathFor('getDashboard'));
-        } else {
-            return $response->withRedirect($this->get('router')->pathFor('getLogin'));
-        }
-    })->setName('getAdminRedirect');
-
 })->add(new AuthMiddleware($app->getContainer()));
 
 

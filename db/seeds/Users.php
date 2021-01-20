@@ -19,11 +19,29 @@ class Users extends AbstractSeed
 
         $data = [
             [
-                'firstname'    => 'John',
-                'lastname' => 'Doe',
-                'email' => 'john@doe.local',
+                'firstname'    => 'Super',
+                'lastname' => 'Admin',
+                'email' => 'superadmin@app.local',
                 'password' => sha1($appSettings['settings']['secret'].'123456789'),
                 'role_id' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'firstname'    => 'Simple',
+                'lastname' => 'Admin',
+                'email' => 'admin@app.local',
+                'password' => sha1($appSettings['settings']['secret'].'123456789'),
+                'role_id' => 2,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'firstname'    => 'Simple',
+                'lastname' => 'User',
+                'email' => 'user@app.local',
+                'password' => sha1($appSettings['settings']['secret'].'123456789'),
+                'role_id' => 3,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]

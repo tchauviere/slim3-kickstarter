@@ -7,7 +7,7 @@
  * Time:    12:20
  */
 
-use Controllers\Admin\DashboardController;
+use Controllers\Admin\HomeController;
 use Middlewares\Admin\AuthMiddleware;
 
 /*
@@ -15,13 +15,15 @@ use Middlewares\Admin\AuthMiddleware;
  */
 $baseGeneratedAdminUrl = '/' . getenv('ADMIN_BASE_URI');
 
-$app->group($baseGeneratedAdminUrl.'/dashboard', function () use ($app) {
-   /*
-    * Display routes
-    */
-    $app->get('', DashboardController::class.':getDashboard')->setName('getDashboard');
+$app->group($baseGeneratedAdminUrl, function () use ($app) {
 
-   /*
-    * Actions routes
-    */
+    // Road meant to redirect Admin to Dashboard if logged in or to Auth form
+    $app->get('', HomeController::class . ':getHome')->setName('getAdminRedirect');
+
 })->add(new AuthMiddleware($app->getContainer()));
+
+
+
+
+
+

@@ -7,11 +7,12 @@
  * Time:    12:41
  */
 
-namespace Controllers\Front;
+namespace Controllers\Auth;
 
 use Carbon\Carbon;
 use Controllers\Core\BaseAdminController;
 use Models\Recovery;
+use Models\Role;
 use Models\User;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -19,12 +20,6 @@ use Slim\Http\Response;
 class LoginController extends BaseAdminController
 {
     public function getLogin(Request $request, Response $response, $args) {
-        try {
-
-        } catch (\Exception $e) {
-            $this->logger->addError('[Front]LoginController::getLogin "'.$e->getMessage().'" (CODE: "'.$e->getCode().'")');
-        }
-
         return $this->twig->render($response, 'front/login.twig', $this->tpl_vars);
     }
 
@@ -32,19 +27,27 @@ class LoginController extends BaseAdminController
         try {
             $user = User::where([
                 ['email', '=', $request->getParam('email')],
-                ['password', '=', sha1($this->container->get('settings')['secret'].$request->getParam('password'))],
-            ])->firstOrFail();
+                ['password', '=', sha1($this->settings['secret'].$request->getParam('password'))],
+            ])->with('role')->firstOrFail();
 
             // Save user in session, then redirect to dashboard
             $this->setLoggedUser($user);
 
-            return $response->withRedirect($this->container->get('router')->pathFor('getHome'));
+            if (in_array($user->role_id, [Role::$ADMIN, Role::$SUPERADMIN])) {
+                // Redirect user to Dashboard
+                return $response->withRedirect($this->router->pathFor('getDashboard'));
+            } else if ($user->role_id === Role::$USER) {
+                // Redirect user to Home
+                return $response->withRedirect($this->router->pathFor('getHome'));
+            } else {
+                // User has no known role, something went wrong, empty session and redirect to login
+                $this->unsetLoggedUser();
+                throw new \Exception($this->translator->trans('access_denied'), __LINE__);
+            }
         } catch (\Exception $e) {
             $this->addErrorMessage($this->translator->trans('bad_credentials'));
             $this->persistMessages();
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
-                'login' => 'false',
-            ]));
+            return $response->withRedirect($this->router->pathFor('getLogin'));
         }
     }
 
@@ -59,7 +62,7 @@ class LoginController extends BaseAdminController
 
             if (strtotime($recovery->expires_at) < $now) {
                 $recovery->forceDelete();
-                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                return $response->withRedirect($this->router->pathFor('getLogin', [], [
                     'new_password' => 'false',
                 ]));
             }
@@ -81,17 +84,17 @@ class LoginController extends BaseAdminController
             }
 
             $user = User::where('id', $recovery->user_id)->firstOrFail();
-            $user->password = sha1($this->container->get('settings')['secret'].$newPassword);
+            $user->password = sha1($this->settings['secret'].$newPassword);
             $user->saveOrFail();
 
             // Remove old recovery not usable anymore
             $recovery->forceDelete();
 
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+            return $response->withRedirect($this->router->pathFor('getLogin', [], [
                 'new_password' => 'true',
             ]));
         } catch (\Exception $e) {
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+            return $response->withRedirect($this->router->pathFor('getLogin', [], [
                 'new_password' => 'false',
             ]));
         }
@@ -105,7 +108,7 @@ class LoginController extends BaseAdminController
 
             if (strtotime($recovery->expires_at) < $now) {
                 $recovery->forceDelete();
-                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                return $response->withRedirect($this->router->pathFor('getLogin', [], [
                     'new_password' => 'false',
                 ]));
             }
@@ -121,7 +124,7 @@ class LoginController extends BaseAdminController
             return $this->twig->render($response, 'admin/reset_password.twig', $tplData);
 
         } catch (\Exception $e) {
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+            return $response->withRedirect($this->router->pathFor('getLogin', [], [
                 'new_password' => 'false',
             ]));
         }
@@ -134,7 +137,7 @@ class LoginController extends BaseAdminController
             $email = $request->getParam('fp_email');
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                return $response->withRedirect($this->router->pathFor('getLogin', [], [
                     'reset_password' => 'false',
                 ]));
             }
@@ -145,19 +148,19 @@ class LoginController extends BaseAdminController
             $recoveryExists = Recovery::where('user_id', $user->id)->first();
 
             if ($recoveryExists) {
-                return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+                return $response->withRedirect($this->router->pathFor('getLogin', [], [
                     'reset_password' => 'false',
                 ]));
             }
 
             $recovery = new Recovery();
             $recovery->user_id = $user->id;
-            $recovery->token = sha1(time().$user->email.$this->container->get('settings')['secret']);
+            $recovery->token = sha1(time().$user->email.$this->settings['secret']);
             $recovery->expires_at = Carbon::now()->addMinutes(30);
             $recovery->saveOrFail();
 
             $recoveryURL = $request->getUri()->getScheme().'://'.$request->getUri()->getHost();
-            $recoveryURL .= $this->container->get('router')->pathFor(
+            $recoveryURL .= $this->router->pathFor(
                 'getResetPassword',
                 [
                     'token' => $recovery->token
@@ -172,8 +175,8 @@ class LoginController extends BaseAdminController
             ]);
 
             $this->mailer->setFrom(
-                $this->container->get('settings')['mailer']['mail_from'],
-                $this->container->get('settings')['mailer']['name_from']
+                $this->settings['mailer']['mail_from'],
+                $this->settings['mailer']['name_from']
             );
             $this->mailer->addAddress($user->email);
             $this->mailer->isHTML(true); // Set email format to HTML
@@ -181,11 +184,11 @@ class LoginController extends BaseAdminController
             $this->mailer->Body    = $passwordRecoveryEmail;
             $this->mailer->send();
 
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+            return $response->withRedirect($this->router->pathFor('getLogin', [], [
                 'reset_password' => 'true',
             ]));
         } catch (\Exception $e) {
-            return $response->withRedirect($this->container->get('router')->pathFor('getLogin', [], [
+            return $response->withRedirect($this->router->pathFor('getLogin', [], [
                 'reset_password' => 'false',
             ]));
         }
@@ -193,6 +196,6 @@ class LoginController extends BaseAdminController
 
     public function getLogout(Request $request, Response $response, $args) {
         $this->unsetLoggedUser();
-        return $response->withRedirect($this->container->get('router')->pathFor('getLogin'));
+        return $response->withRedirect($this->router->pathFor('getLogin'));
     }
 }

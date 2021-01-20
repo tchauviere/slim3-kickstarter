@@ -12,6 +12,7 @@ namespace Controllers\Core;
 use Models\User;
 use Psr\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager;
+use Slim\Router;
 use Symfony\Component\Translation\Translator;
 use Slim\Http\UploadedFile;
 use Slim\Views\Twig;
@@ -30,9 +31,17 @@ class BaseController
      */
     protected $container;
     /**
+     * @var array $settings
+     */
+    protected $settings;
+    /**
      * @var Twig $twig
      */
     protected $twig;
+    /**
+     * @var Router $router
+     */
+    protected $router;
     /**
      * @var Manager $eloquent
      */
@@ -81,6 +90,8 @@ class BaseController
         $this->mailer = $container->get('mailer');
         $this->flash = $container->get('flash');
         $this->logger = $container->get('monolog');
+        $this->router = $container->get('router');
+        $this->settings = $container->get('settings');
 
         $flashes = $this->flash->getMessages();
         if (isset($flashes['errors'])) {

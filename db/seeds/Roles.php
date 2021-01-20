@@ -17,13 +17,19 @@ class Roles extends AbstractSeed
     {
         $data = [
             [
+                'name'    => 'superadmin',
+                'description' => 'Super Admin',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
                 'name'    => 'admin',
-                'description' => 'Users with admin rights',
+                'description' => 'User with Admin rights',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],[
                 'name'    => 'user',
-                'description' => 'Simple user',
+                'description' => 'Simple User',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]

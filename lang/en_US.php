@@ -69,5 +69,5 @@ return array(
     'reset_password_mismatch' => 'Passwords mismatch !',
     'new_password_success' => 'You have successfully changed your password. You can now login with it.',
     'new_password_failed' => 'An error occured while trying to change your password',
-    'email_team_signature' => 'The team'
+    'email_team_signature' => 'The team',
 );
