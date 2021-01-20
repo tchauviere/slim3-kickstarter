@@ -65,4 +65,9 @@ $application->add(new GenerateSecretCommand());
  */
 $application->add(new CacheClearCommand());
 
+/*
+ * Controller commands
+ */
+$application->add(new ControllerGeneratorCommand());
+
 $application->run();

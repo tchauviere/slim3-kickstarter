@@ -1,0 +1,22 @@
+<?php
+
+namespace {{namespace}};
+
+use Controllers\Core\{{extendsController}};
+use Slim\Http\Request;
+use Slim\Http\Response;
+
+class {{controllerName}} extends {{extendsController}}
+{
+    public function (Request $request, Response $response, $args) {
+        $tplData = [];
+
+        try {
+
+        } catch (\Exception $e) {
+           $this->logger->addError('[Front]FrontController::getHome "'.$e->getMessage().'" (CODE: "'.$e->getCode().'")');
+        }
+
+        return $this->twig->render($response, 'front/home.twig', $tplData);
+    }
+}
