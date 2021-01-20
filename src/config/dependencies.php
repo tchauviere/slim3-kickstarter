@@ -127,55 +127,16 @@ $container['notFoundHandler'] = function (Container $c) {
 $container['errorHandler'] = function (Container $c) {
 
     return function (Request $request, Response $response, \Exception $exception) use ($c) {
-        $logger = $c['monolog'];
+
+        $logger = $c->get('monolog');
         $twig = $c->get('twig');
-        $finalTrace = [];
 
         $logger->addError('[CORE]ERROR HANDLER EXCEPTION : "'.$exception->getMessage().'" (CODE: "'.$exception->getCode().'")');
-        $debugBacktrace = $exception->getTrace();
 
 
-        foreach ($debugBacktrace as $trace) {
-            $file = 'FILE => ';
-            $line = 'LINE => ';
-            $class = 'CLASS => ';
-            $function = 'FUNCTION => ';
-
-            if (isset($trace['file'])) {
-                $file .= '<i>'.$trace['file'].'</i>';
-            } else {
-                $file .= '';
-            }
-            if (isset($trace['line'])) {
-                $line .= '<b>'.$trace['line'].'</b>';
-            } else {
-                $line .= '';
-            }
-            if (isset($trace['class'])) {
-                $class .= $trace['class'];
-            } else {
-                $class .= '';
-            }
-            if (isset($trace['function'])) {
-                $function .= '<i>'.$trace['function'].'</i>';
-            } else {
-                $function .= '';
-            }
-
-            $finalTrace[] = '<li>'.$file.'<br/>'.$line.'<br/>'.$class.'<br/>'.$function.'<br/></li>';
-        }
-
-
-        return $response->write($exception->getMessage());
-
-       /* return $twig->render($response->withStatus(500), 'core/500.twig', [
-            'env' => getenv('SLIM3_MODE'),
-            'exception' => [
+        return $twig->render($response->withStatus(500), 'core/500.twig', [
                 'code' => $exception->getCode(),
-                'message' => $exception->getMessage()
-            ],
-            'trace' => $finalTrace
-        ]);*/
+        ]);
     };
 
 };

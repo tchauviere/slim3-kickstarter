@@ -42,13 +42,25 @@ class BaseMiddleware
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \Interop\Container\Exception\ContainerException
      */
-    public function __invoke(Request $request, Response $response, $next)
+    /*public function __invoke(Request $request, Response $response, $next)
     {
        try {
+
            $response = $next($request, $response);
+           die('2');
            return $response;
        } catch (\Exception $appException) {
-           throw $appException;
+
+           return $this->twig->render($response->withStatus(500), 'core/500.twig', [
+               'env' => getenv('SLIM3_MODE'),
+               'exception' => [
+                   'code' => $appException->getCode(),
+                   'message' => $appException->getMessage()
+               ],
+               'trace' => [],
+           ]);
+           exit;
+           //throw $appException;
        }
-    }
+    }*/
 }

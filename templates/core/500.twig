@@ -6,14 +6,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-        <title>{{ '404_title'|trans }}</title>
+        <title>{{ '500_title'|trans }}</title>
 
         <!-- Google font -->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Titillium+Web:700,900" rel="stylesheet">
 
         <!-- Custom stlylesheet -->
-        <link type="text/css" rel="stylesheet" href="/css/404.min.css" />
+        <link type="text/css" rel="stylesheet" href="/css/500.min.css" />
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,14 +23,15 @@
         <![endif]-->
     </head>
     <body>
-        <div id="notfound">
-            <div class="notfound">
-                <div class="notfound-404">
-                    <h1>{{ '404_title'|trans }}</h1>
+        <div id="error">
+            <div class="error">
+                <div class="error-500">
+                    <h1>{{ '500_title'|trans }}</h1>
                 </div>
-                <h2>{{ '404_subtitle'|trans }}</h2>
-                <p>{{ '404_msg'|trans }}</p>
-                <a href="{{path_for('getHome')}}">{{ 'back_home'|trans }}</a>
+                <h2>{{ '500_subtitle'|trans }}</h2>
+                <p>{{ '500_msg'|trans }}</p>
+                <p>{{ '500_code'|trans }} : #{{ code }}</p>
+                <a href="#" onclick="window.history.go(-1); return false;">{{ 'back'|trans }}</a>
             </div>
         </div>
     </body><!-- This views was made by Colorlib (https://colorlib.com) -->

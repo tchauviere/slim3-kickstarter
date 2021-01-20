@@ -14,6 +14,8 @@ return [
         'determineRouteBeforeAppMiddleware' => (bool)(getenv('SLIM3_ADD_CONTENT_LENGTH_HEADER') === 'true'),
 
         // App specific settings
+        'debug' => (bool)(strtolower(getenv('SLIM3_MODE')) === 'dev'),
+        'whoops.editor' => 'sublime',
         'mode' => strtolower(getenv('SLIM3_MODE')),
         'secret' => getenv('APP_SECRET'),
         'lang_path' => getenv('APP_LANG_PATH'),
