@@ -48,7 +48,7 @@ class CompileCommand extends Command
     {
         $baseAssetsDir = $assetsDir = getenv('BASE_DIR').DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR;
         $baseOutputDir = getenv('BASE_DIR').DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR;
-        $scss = new \Leafo\ScssPhp\Compiler();
+        $scss = new \ScssPhp\ScssPhp\Compiler();
         $type = strtolower($input->getArgument($this->commandArgumentType));
         $watch = $input->hasParameterOption('--'.$this->commandOptionWatch) || $input->hasParameterOption('-'.$this->commandOptionWatchShortcut);
 

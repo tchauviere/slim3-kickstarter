@@ -16,7 +16,7 @@ It is composed of many great packages such as:
   - PHPMailer
   - Bootstrap 4
   - JQuery
-  - leafo/scssphp
+  - scssphp/scssphp
   - matthiasmullie/minify
   - vlucas/phpdotenv
   - zeuxisoo/slim-whoops
