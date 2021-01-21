@@ -11,6 +11,7 @@ namespace Controllers\Auth;
 
 use Carbon\Carbon;
 use Controllers\Core\BaseAdminController;
+use Forms\Auth\AuthForm;
 use Models\Recovery;
 use Models\Role;
 use Models\User;
@@ -20,7 +21,9 @@ use Slim\Http\Response;
 class LoginController extends BaseAdminController
 {
     public function getLogin(Request $request, Response $response, $args) {
-        return $this->twig->render($response, 'front/login.twig', $this->tpl_vars);
+        $form = new AuthForm();
+        $this->tpl_vars['form'] = $form->render();
+        return $this->twig->render($response, 'auth/login.twig', $this->tpl_vars);
     }
 
     public function postLogin(Request $request, Response $response, $args) {
@@ -121,7 +124,7 @@ class LoginController extends BaseAdminController
                 $tplData['mismatch'] = true;
             }
 
-            return $this->twig->render($response, 'admin/reset_password.twig', $tplData);
+            return $this->twig->render($response, 'auth/reset_password.twig', $tplData);
 
         } catch (\Exception $e) {
             return $response->withRedirect($this->router->pathFor('getLogin', [], [
