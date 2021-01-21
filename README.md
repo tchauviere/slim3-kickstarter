@@ -20,6 +20,7 @@ It is composed of many great packages such as:
   - matthiasmullie/minify
   - vlucas/phpdotenv
   - zeuxisoo/slim-whoops
+  - nette/forms
 
 ## Installation :
 
