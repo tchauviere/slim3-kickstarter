@@ -52,6 +52,9 @@ abstract class BaseForm
         return $this;
     }
 
+    /**
+     * Initialize $this->>form (Nette/Form)
+     */
     public function makeForm()
     {
         $this->form = new Form();
@@ -59,6 +62,7 @@ abstract class BaseForm
     }
 
     /**
+     * Default form renderer for Bootstrap 4
      * @param Form $form
      * @return Form
      */
@@ -106,32 +110,47 @@ abstract class BaseForm
      */
     abstract public function describe();
 
+    /**
+     * Return HTML representation of the form
+     * @return string
+     */
     public function render()
     {
         return (string)$this->describe()->form;
     }
 
-    public function isValid() {
-
+    /**
+     * Determine if form is valid or not and handle error/success messages to template as well
+     * @return bool
+     */
+    public function isValid()
+    {
         if (!$this->form->isSuccess()) {
             // Set errors in flash message directly
             $this->flash->addMessage('errors', [
                 'title' => $this->translator->trans('error'),
                 'msgs' => $this->getErrors(),
             ]);
-
             return false;
         }
-
         return true;
     }
 
+    /**
+     * Get Form values
+     * @return array|\Nette\Utils\ArrayHash|object
+     */
     public function getValues()
     {
         return $this->form->getValues();
     }
 
-    public function addError($message) {
+    /**
+     * Add an error message to the form
+     * @param string $message
+     */
+    public function addError(string $message)
+    {
         $this->form->addError($message);
     }
 
