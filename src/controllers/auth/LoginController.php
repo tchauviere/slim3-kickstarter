@@ -21,37 +21,49 @@ use Slim\Http\Response;
 class LoginController extends BaseAdminController
 {
     public function getLogin(Request $request, Response $response, $args) {
-        $form = new AuthForm();
-        $this->tpl_vars['form'] = $form->render();
+        $authForm = new AuthForm();
+        $this->tpl_vars['form'] = $authForm->render();
         return $this->twig->render($response, 'auth/login.twig', $this->tpl_vars);
     }
 
     public function postLogin(Request $request, Response $response, $args) {
-        try {
-            $user = User::where([
-                ['email', '=', $request->getParam('email')],
-                ['password', '=', sha1($this->settings['secret'].$request->getParam('password'))],
-            ])->with('role')->firstOrFail();
 
-            // Save user in session, then redirect to dashboard
-            $this->setLoggedUser($user);
+            $loginForm = $this->loadForm(AuthForm::class);
 
-            if (in_array($user->role_id, [Role::$ADMIN, Role::$SUPERADMIN])) {
-                // Redirect user to Dashboard
-                return $response->withRedirect($this->router->pathFor('getDashboard'));
-            } else if ($user->role_id === Role::$USER) {
-                // Redirect user to Home
-                return $response->withRedirect($this->router->pathFor('getHome'));
+            if ($loginForm->isValid()) {
+                $credentials = $loginForm->getValues();
+
+                $user = User::where([
+                                        ['email', '=', $credentials->email],
+                                        ['password', '=', sha1($this->settings['secret'].$credentials->password)],
+                                    ])->with('role')->first();
+
+                if (!$user) {
+                    $this->addErrorMessage($this->translator->trans('bad_credentials'));
+                    $this->persistMessages();
+                    return $response->withRedirect($this->router->pathFor('getLogin'));
+                }
+
+                // Save user in session, then redirect to dashboard
+                $this->setLoggedUser($user);
+
+                // Redirect user depending on its role
+                if (in_array($user->role_id, [Role::$ADMIN, Role::$SUPERADMIN])) {
+                    // Redirect user to Dashboard
+                    return $response->withRedirect($this->router->pathFor('getDashboard'));
+                } else if ($user->role_id === Role::$USER) {
+                    // Redirect user to Home
+                    return $response->withRedirect($this->router->pathFor('getHome'));
+                } else {
+                    // User has no known role, something went wrong, empty session and redirect to login
+                    $this->unsetLoggedUser();
+                    $this->addErrorMessage($this->translator->trans('bad_account_settings'));
+                    $this->persistMessages();
+                    return $response->withRedirect($this->router->pathFor('getLogin'));
+                }
             } else {
-                // User has no known role, something went wrong, empty session and redirect to login
-                $this->unsetLoggedUser();
-                throw new \Exception($this->translator->trans('access_denied'), __LINE__);
+                return $response->withRedirect($this->router->pathFor('getLogin'));
             }
-        } catch (\Exception $e) {
-            $this->addErrorMessage($this->translator->trans('bad_credentials'));
-            $this->persistMessages();
-            return $response->withRedirect($this->router->pathFor('getLogin'));
-        }
     }
 
     public function postNewPassword(Request $request, Response $response, $args) {
@@ -199,6 +211,8 @@ class LoginController extends BaseAdminController
 
     public function getLogout(Request $request, Response $response, $args) {
         $this->unsetLoggedUser();
+        $this->addSuccessMessage($this->translator->trans('disconnect_success'));
+        $this->persistMessages();
         return $response->withRedirect($this->router->pathFor('getLogin'));
     }
 }

@@ -1,0 +1,17 @@
+{% if success is defined %}
+    <div class="row">
+        <div class="col-md-4 offset-md-4 pt-5">
+            <div id="head_page_successes" class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'close'|trans }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p><b>{{ success.title }}</b><p>
+                <ul>
+                    {% for msg in success.msgs %}
+                        <li>{{msg}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}

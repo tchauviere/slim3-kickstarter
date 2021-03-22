@@ -9,7 +9,9 @@
 
 namespace Controllers\Core;
 
+use Forms\Core\BaseForm;
 use Models\User;
+use Nette\Forms\Form;
 use Psr\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager;
 use Slim\Router;
@@ -200,5 +202,15 @@ class BaseController
     public static function getQueries(Builder $builder) {
         $addSlashes = str_replace('?', "'?'", $builder->toSql());
         return vsprintf(str_replace('?', '%s', $addSlashes), $builder->getBindings());
+    }
+
+    /**
+     * @param $formType
+     * @return BaseForm
+     */
+    public function loadForm($formType) {
+        $form = new $formType();
+        $form->describe();
+        return $form;
     }
 }

@@ -29,6 +29,15 @@
         <div id="content">
             <!-- Begin Page Content -->
             <div class="container-fluid">
+
+                {% if errors is defined and errors is iterable and errors|length %}
+                    {% include '_partials/admin/error_head_page.twig' with {errors: errors} %}
+                {% endif %}
+
+                {% if success is defined and success is iterable and success|length %}
+                    {% include '_partials/admin/success_head_page.twig' with {success: success} %}
+                {% endif %}
+
                 {% block body %}{% endblock %}
             </div>
             <!-- /.container-fluid -->
