@@ -53,7 +53,7 @@ abstract class BaseForm
     }
 
     /**
-     * Initialize $this->>form (Nette/Form)
+     * Initialize $this->form (Nette/Form)
      */
     public function makeForm()
     {
