@@ -14,7 +14,7 @@
                             {{ current_user.firstname|capitalize }} {{ current_user.lastname|upper }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="connected_dropdown">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ path_for('getUserProfile') }}">
                                 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                 {{ 'profile'|trans }}
                             </a>

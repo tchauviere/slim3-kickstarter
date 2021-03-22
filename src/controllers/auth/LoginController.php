@@ -12,6 +12,7 @@ namespace Controllers\Auth;
 use Carbon\Carbon;
 use Controllers\Core\BaseAdminController;
 use Forms\Auth\AuthForm;
+use Forms\Auth\UserProfileForm;
 use Models\Recovery;
 use Models\Role;
 use Models\User;

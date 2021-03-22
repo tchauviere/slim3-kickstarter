@@ -35,9 +35,16 @@ abstract class BaseForm
     protected $translator;
 
     /**
+     * Flash Messages
      * @var Messages $flash
      */
     protected $flash;
+
+    /**
+     * Form default values array
+     * @var array $default_values
+     */
+    protected $default_values = [];
 
 
     public function __construct()
@@ -116,7 +123,9 @@ abstract class BaseForm
      */
     public function render()
     {
-        return (string)$this->describe()->form;
+        $this->describe();
+        $this->form->setDefaults($this->default_values);
+        return (string)$this->form;
     }
 
     /**
@@ -143,6 +152,14 @@ abstract class BaseForm
     public function getValues()
     {
         return $this->form->getValues();
+    }
+
+    /**
+     * Set Form default values
+     */
+    public function setDefaultValues(array $default_values)
+    {
+        $this->default_values = $default_values;
     }
 
     /**

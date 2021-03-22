@@ -18,18 +18,18 @@ class Roles extends AbstractSeed
         $data = [
             [
                 'name'    => 'superadmin',
-                'description' => 'Super Admin',
+                'description' => 'super_admin_desc',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
                 'name'    => 'admin',
-                'description' => 'User with Admin rights',
+                'description' => 'admin_desc',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],[
                 'name'    => 'user',
-                'description' => 'Simple User',
+                'description' => 'user_desc',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -37,6 +37,6 @@ class Roles extends AbstractSeed
 
         $roles = $this->table('roles');
         $roles->insert($data)
-            ->save();
+              ->save();
     }
 }

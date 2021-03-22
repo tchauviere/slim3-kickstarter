@@ -7,7 +7,7 @@
  * Time:    12:20
  */
 
-use Controllers\Front\HomeController;
+use Controllers\Front\ProfileController;
 use Middlewares\Front\AuthMiddleware;
 
 /*
@@ -15,7 +15,9 @@ use Middlewares\Front\AuthMiddleware;
  */
 $app->group('/profile', function () use ($app) {
 
-    $app->get('', HomeController::class . ':getHome')->setName('getHome');
+    $app->get('', ProfileController::class . ':getUserProfile')->setName('getUserProfile');
+
+    $app->post('/update', ProfileController::class . ':postUserProfile')->setName('postUserProfile');
 
 })->add(new AuthMiddleware($app->getContainer()));
 
