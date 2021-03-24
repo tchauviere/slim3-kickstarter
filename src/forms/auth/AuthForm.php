@@ -8,7 +8,7 @@ class AuthForm extends BaseForm
 {
     public function describe()
     {
-        $this->form->setAction($this->router->pathFor('postLogin'));
+        $this->form->setAction($this->router->pathFor('postAuth'));
         $this->form->setMethod('POST');
 
         $this->form->addEmail('email', $this->translator->trans('email'))

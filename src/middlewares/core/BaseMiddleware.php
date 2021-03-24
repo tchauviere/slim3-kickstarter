@@ -10,10 +10,10 @@
 namespace Middlewares\Core;
 
 use Psr\Container\ContainerInterface;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Slim\Flash\Messages;
 use Slim\Views\Twig;
 use Slim\Router;
+use Symfony\Component\Translation\Translator;
 
 class BaseMiddleware
 {
@@ -25,42 +25,20 @@ class BaseMiddleware
      * @var Router
      */
     protected $router;
+    /**
+     * @var Messages $flash
+     */
+    protected $flash;
+    /**
+     * @var Translator $translator
+     */
+    protected $translator;
 
     public function __construct(ContainerInterface $container) {
 
         $this->twig = $container->get('twig');
         $this->router = $container->get('router');
+        $this->flash = $container->get('flash');
+        $this->translator = $container->get('translator');
     }
-
-    /**
-     * Example middleware invokable class
-     *
-     * @param Request $request PSR7 request
-     * @param Response $response PSR7 response
-     * @param  callable $next Next middleware
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     * @throws \Interop\Container\Exception\ContainerException
-     */
-    /*public function __invoke(Request $request, Response $response, $next)
-    {
-       try {
-
-           $response = $next($request, $response);
-           die('2');
-           return $response;
-       } catch (\Exception $appException) {
-
-           return $this->twig->render($response->withStatus(500), 'core/500.twig', [
-               'env' => getenv('SLIM3_MODE'),
-               'exception' => [
-                   'code' => $appException->getCode(),
-                   'message' => $appException->getMessage()
-               ],
-               'trace' => [],
-           ]);
-           exit;
-           //throw $appException;
-       }
-    }*/
 }

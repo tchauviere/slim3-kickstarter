@@ -30,7 +30,7 @@ class AuthMiddleware extends BaseMiddleware
         if (!isset($_SESSION['user'])) {
             // Un-logged user tries to access private section => Redirect to Login
             $response = $response->withRedirect(
-                $this->router->pathFor('getLogin')
+                $this->router->pathFor('getAuth')
             );
         } else {
             // Logged user tries to access private section => Allow access
