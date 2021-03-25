@@ -21,7 +21,7 @@ class PasswordRecoveryForm extends BaseForm
 
         $this->form->addPassword('password_verify', $this->translator->trans('password_verify'))
             ->setRequired(true)
-            ->addRule($this->form::EQUAL,  $this->translator->trans('password_missmatch'), $this->form['password'])
+            ->addRule($this->form::EQUAL,  $this->translator->trans('password_mismatch'), $this->form['password'])
             ->setOmitted();
 
         $this->form->addSubmit('forgotPassword', $this->translator->trans('retrieve_password'));

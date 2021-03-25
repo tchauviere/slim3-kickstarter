@@ -47,44 +47,43 @@ class AuthController extends BaseAdminController
      * @return Response
      */
     public function postAuth(Request $request, Response $response, $args) {
-
         $authForm = $this->loadForm(AuthForm::class);
 
-            if ($authForm->isValid()) {
-                $credentials = $authForm->getValues();
+        if ($authForm->isValid()) {
+            $credentials = $authForm->getValues();
 
-                $user = User::where([
-                                        ['email', '=', $credentials->email],
-                                        ['password', '=', sha1($this->settings['secret'].$credentials->password)],
-                                    ])->with('role')->first();
+            $user = User::where([
+                                    ['email', '=', $credentials->email],
+                                    ['password', '=', sha1($this->settings['secret'].$credentials->password)],
+                                ])->with('role')->first();
 
-                if (!$user) {
-                    $this->addErrorMessage($this->translator->trans('bad_credentials'));
-                    $this->persistMessages();
-                    return $response->withRedirect($this->router->pathFor('getAuth'));
-                }
-
-                // Save user in session, then redirect to dashboard
-                $this->setLoggedUser($user);
-
-                // Redirect user depending on its role
-                if (in_array($user->role_id, [Role::$ADMIN, Role::$SUPERADMIN])) {
-                    // Redirect user to Dashboard
-                    return $response->withRedirect($this->router->pathFor('getDashboard'));
-                } else if ($user->role_id === Role::$USER) {
-                    // Redirect user to Home
-                    return $response->withRedirect($this->router->pathFor('getHome'));
-                } else {
-                    // User has no known role, something went wrong, empty session and redirect to login
-                    $this->unsetLoggedUser();
-                    $this->addErrorMessage($this->translator->trans('bad_account_settings'));
-                    $this->persistMessages();
-                    return $response->withRedirect($this->router->pathFor('getAuth'));
-                }
-            } else {
-                // Invalid Form
+            if (!$user) {
+                $this->addErrorMessage($this->translator->trans('bad_credentials'));
+                $this->persistMessages();
                 return $response->withRedirect($this->router->pathFor('getAuth'));
             }
+
+            // Save user in session, then redirect to dashboard
+            $this->setLoggedUser($user);
+
+            // Redirect user depending on its role
+            if (in_array($user->role_id, [Role::$ADMIN, Role::$SUPERADMIN])) {
+                // Redirect user to Dashboard
+                return $response->withRedirect($this->router->pathFor('getDashboard'));
+            } else if ($user->role_id === Role::$USER) {
+                // Redirect user to Home
+                return $response->withRedirect($this->router->pathFor('getHome'));
+            } else {
+                // User has no known role, something went wrong, empty session and redirect to login
+                $this->unsetLoggedUser();
+                $this->addErrorMessage($this->translator->trans('bad_account_settings'));
+                $this->persistMessages();
+                return $response->withRedirect($this->router->pathFor('getAuth'));
+            }
+        } else {
+            // Invalid Form
+            return $response->withRedirect($this->router->pathFor('getAuth'));
+        }
     }
 
     /**
@@ -210,71 +209,52 @@ class AuthController extends BaseAdminController
 
             return $this->twig->render($response, 'auth/password_recovery.twig', $this->tpl_vars);
         } catch (\Exception $e) {
-            dd($args, $e->getMessage(), $e->getLine());
             // Unable to complete request, redirect to login page with no information
             return $response->withRedirect($this->router->pathFor('getAuth', [], ['code' => __LINE__]));
         }
     }
 
     public function postPasswordRecovery(Request $request, Response $response, $args) {
-        try {
-            $email = $request->getParam('fp_email');
+        $passwordRecoveryForm = $this->loadForm(PasswordRecoveryForm::class, ['token' => @$args['token']]);
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                return $response->withRedirect($this->router->pathFor('getAuth', [], [
-                    'reset_password' => 'false',
-                ]));
-            }
+        if ($passwordRecoveryForm->isValid()) {
 
-            $user = User::where('email', $email)->firstOrFail();
-
-            // Check if a recovery does not already exists for current user
-            $recoveryExists = Recovery::where('user_id', $user->id)->first();
-
-            if ($recoveryExists) {
-                return $response->withRedirect($this->router->pathFor('getAuth', [], [
-                    'reset_password' => 'false',
-                ]));
-            }
-
-            $recovery = new Recovery();
-            $recovery->user_id = $user->id;
-            $recovery->token = sha1(time().$user->email.$this->settings['secret']);
-            $recovery->expires_at = Carbon::now()->addMinutes(30);
-            $recovery->saveOrFail();
-
-            $recoveryURL = $request->getUri()->getScheme().'://'.$request->getUri()->getHost();
-            $recoveryURL .= $this->router->pathFor(
-                'getResetPassword',
-                [
-                    'token' => $recovery->token
-                ],
-                []
-            );
-
-            // Prepare email
-            $passwordRecoveryEmail = $this->twig->fetch('emails/password_recovery.twig', [
-                'user' => $user,
-                'recovery_url' => $recoveryURL,
+            $newPassword = sha1($this->settings['secret'].$passwordRecoveryForm->getValues()->password);
+            $userID = (int)Recovery::where('token', $args['token'])->first()->value('user_id');
+            $isUpdated = User::where('id', $userID)->update([
+                'password' => $newPassword,
             ]);
+            $user = User::where('id', $userID)->first();
 
-            $this->mailer->setFrom(
-                $this->settings['mailer']['mail_from'],
-                $this->settings['mailer']['name_from']
-            );
-            $this->mailer->addAddress($user->email);
-            $this->mailer->isHTML(true); // Set email format to HTML
-            $this->mailer->Subject = $this->translator->trans('password_recovery_email_title');
-            $this->mailer->Body    = $passwordRecoveryEmail;
-            $this->mailer->send();
+            if ($isUpdated && $user) {
+                // Save user in session, then redirect to right home depending on user role
+                $this->setLoggedUser($user);
 
-            return $response->withRedirect($this->router->pathFor('getAuth', [], [
-                'reset_password' => 'true',
-            ]));
-        } catch (\Exception $e) {
-            return $response->withRedirect($this->router->pathFor('getAuth', [], [
-                'reset_password' => 'false',
-            ]));
+                // Redirect user depending on its role
+                if (in_array($user->role_id, [Role::$ADMIN, Role::$SUPERADMIN])) {
+                    // Redirect user to Dashboard
+                    Recovery::where('token', $args['token'])->forceDelete();
+                    return $response->withRedirect($this->router->pathFor('getDashboard'));
+                } else if ($user->role_id === Role::$USER) {
+                    // Redirect user to Home
+                    Recovery::where('token', $args['token'])->forceDelete();
+                    return $response->withRedirect($this->router->pathFor('getHome'));
+                } else {
+                    // User has no known role, something went wrong, empty session and redirect to login
+                    $this->unsetLoggedUser();
+                    $this->addErrorMessage($this->translator->trans('bad_account_settings'));
+                    $this->persistMessages();
+                    Recovery::where('token', $args['token'])->forceDelete();
+                    return $response->withRedirect($this->router->pathFor('getAuth'));
+                }
+            } else {
+                $this->addErrorMessage($this->translator->trans('unable_to_set_new_password'));
+                $this->persistMessages();
+                return $response->withRedirect($this->router->pathFor('getPasswordRecovery', ['token' => @$args['token']]));
+            }
+        } else {
+            // Invalid Form
+            return  $response->withRedirect($this->router->pathFor('getPasswordRecovery', ['token' => @$args['token']]));
         }
     }
 

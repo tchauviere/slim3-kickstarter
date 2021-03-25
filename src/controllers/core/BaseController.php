@@ -206,10 +206,11 @@ class BaseController
 
     /**
      * @param $formType
+     * @param array $data
      * @return BaseForm
      */
-    public function loadForm($formType) {
-        $form = new $formType();
+    public function loadForm($formType, array $data = []) {
+        $form = new $formType($data);
         $form->describe();
         return $form;
     }
