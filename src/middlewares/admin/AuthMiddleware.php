@@ -38,7 +38,6 @@ class AuthMiddleware extends BaseMiddleware
             $this->twig->offsetSet('current_user', $user);
             $response = $next($request, $response);
         }
-
         return $response;
     }
 }

@@ -27,12 +27,17 @@ class AuthMiddleware extends BaseMiddleware
      */
     public function __invoke(Request $request, Response $response, $next)
     {
-        if (isset($_SESSION['user'])) {
+        if (!isset($_SESSION['user'])) {
+            // Un-logged user tries to access private section => Redirect to Login
+            $response = $response->withRedirect(
+                $this->router->pathFor('getAuth')
+            );
+        } else {
+            // Logged user tries to access private section => Allow access
             $user = $_SESSION['user'];
             $this->twig->offsetSet('current_user', $user);
+            $response = $next($request, $response);
         }
-
-        $response = $next($request, $response);
 
         return $response;
     }
