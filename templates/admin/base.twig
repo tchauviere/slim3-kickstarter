@@ -47,6 +47,8 @@
 
         {% include '_partials/admin/logout_modal.twig' %}
 
+        <!-- Third Party Libs -->
+        <script src="{{ base_url() }}/js/core/moment.min.js"></script>
         <!-- Bootstrap core JavaScript-->
         <script src="{{ base_url() }}/js/core/jquery.min.js"></script>
         <script src="{{ base_url() }}/js/core/bootstrap.bundle.min.js"></script>
@@ -85,6 +87,8 @@
                     }
                 }
             };
+
+            var appUrls = {};
         </script>
         {% block js %}{% endblock %}
     </body>

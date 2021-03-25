@@ -17,7 +17,19 @@ use Slim\Http\Response;
 class UsersController extends BaseAdminController
 {
     public function getUsers(Request $request, Response $response, $args) {
-        $this->tpl_vars['users'] = User::all();
         return $this->twig->render($response, 'admin/users/list.twig', $this->tpl_vars);
     }
+
+    public function getUsersPaging(Request $request, Response $response, $args) {
+        $search = $request->getParam('search') ?: [];
+        $start = (int)$request->getParam('start') ?: 0; // Default at least One page
+        $length = (int)$request->getParam('length') ?: 10; // Default to 10 per page
+
+        $collection = User::skip($start)->take($length)->toArray();
+
+        return $response->withJson(['data' => $collection]);
+    }
+
+
+
 }

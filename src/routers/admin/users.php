@@ -22,5 +22,6 @@ $app->group($baseGeneratedAdminUrl.'/users', function () use ($app) {
     /**
      * Action routes
      */
+    $app->get('/paging', UsersController::class . ':getUsersPaging')->setName('getUsersPaging');
 
 })->add(new AuthMiddleware($app->getContainer()));

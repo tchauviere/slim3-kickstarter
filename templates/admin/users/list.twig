@@ -29,65 +29,19 @@
                         <div class="content_wrapper">
                             <table id="users-table" class="text-center">
                                 <thead>
-                                <tr>
-                                    <th>{{ 'id'|trans }}</th>
-                                    <th>{{ 'firstname'|trans }}</th>
-                                    <th>{{ 'lastname'|trans }}</th>
-                                    <th>{{ 'email'|trans }}</th>
-                                    <th>{{ 'type'|trans }}</th>
-                                    <th>{{ 'is_activated'|trans }}</th>
-                                    <th>{{ 'activated_at'|trans }}</th>
-                                    <th>{{ 'actions'|trans }}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for user in users %}
                                     <tr>
-                                        <td class="user_id">{{ user.id }}</td>
-                                        <td class="user_firstname">{{ user.firstname|capitalize }}</td>
-                                        <td class="user_lastname">{{ user.lastname|capitalize }}</td>
-                                        <td class="user_email">{{ user.email }}</td>
-                                        <td class="user_type">
-                                            {% if user.role.name == 'superadmin' %}
-                                                <span class="badge badge-pill badge-primary"><i class="fa fa-user-shield"></i>&nbsp;{{ user.role.name|upper|trans }}</span>
-                                            {% elseif user.role.name == 'admin' %}
-                                                <span class="badge badge-pill badge-secondary"><i class="fa fa-users"></i>&nbsp;{{ user.role.name|upper|trans }}</span>
-                                            {% elseif user.role.name == 'user' %}
-                                                <span class="badge badge-pill badge-info"><i class="fa fa-car"></i>&nbsp;{{ user.role.name|upper|trans }}</span>
-                                            {% else %}
-                                                <span class="badge badge-pill badge-danger"><i class="fa fa-exclamation-triangle"></i>&nbsp;{{ user.role.name|upper|trans }}</span>
-                                            {% endif %}
-                                        </td>
-                                        <td class="user_active">
-                                            {% if user.active %}
-                                                <span class="badge badge-pill badge-success p-2"><i class="fa fa-check"></i></span>
-                                            {% else %}
-                                                <span class="badge badge-pill badge-danger p-2"><i class="fa fa-times"></i></span>
-                                            {% endif %}
-                                        </td>
-                                        <td class="user_activated_at">
-                                            {% if user.activated_at %}
-                                                {{ user.activated_at|date('d/m/Y H:i:s') }}
-                                            {% else %}
-                                                <span class="badge badge-pill badge-danger p-2"><i class="fa fa-times"></i></span>
-                                            {% endif %}
-                                        </td>
-                                        <td class="user_actions text-center">
-
-                                            <a href="{{ path_for('getHome', { 'id': user.id }) }}" data-toggle="tooltip" data-placement="top" title="{{ 'edit'|trans }}" data-placement="top" class="btn btn-info btn-icon-split modify_btn" data-id="{{ user.id }}">
-                                                <span class="icon text-white-50"><i class="fas fa-id-card"></i></span>
-                                            </a>
-
-                                            <form method="post" action="{{ path_for('getHome') }}" onsubmit="return confirm('{{ 'are_you_sure'|trans }}');" style="display: inline-block;">
-                                                <input type="hidden" value="{{ user.id }}" name="user_id">
-                                                <button type="submit" data-toggle="tooltip" data-placement="top" title="{{ 'delete'|trans }}" data-placement="top" class="btn btn-danger btn-icon-split delete_btn"  data-id="{{ user.id }}">
-                                                    <span class="icon text-white-50"><i class="fas fa-trash-alt"></i></span>
-                                                </button>
-                                            </form>
-                                        </td>
+                                        <th>{{ 'id'|trans }}</th>
+                                        <th>{{ 'firstname'|trans }}</th>
+                                        <th>{{ 'lastname'|trans }}</th>
+                                        <th>{{ 'email'|trans }}</th>
+                                        <th>{{ 'type'|trans }}</th>
+                                        <th>{{ 'is_activated'|trans }}</th>
+                                        <th>{{ 'created_at'|trans }}</th>
+                                        <th>{{ 'activated_at'|trans }}</th>
+                                        <th>{{ 'updated_at'|trans }}</th>
+                                        <th>{{ 'actions'|trans }}</th>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
+                                </thead>
                             </table>
                         </div>
                     </div>
@@ -100,6 +54,9 @@
 
 {% block js %}
     <script src="{{ base_url() }}/js/core/jquery.datatable.min.js"></script>
+    <script type="application/javascript">
+        appUrls.getUsersPaging = "{{ path_for('getUsersPaging') }}";
+    </script>
     <script src="{{ base_url() }}/js/admin/users/list.min.js"></script>
 {% endblock %}
 

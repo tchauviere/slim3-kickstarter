@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $table = 'users';
-    protected $fillable = ['firstname', 'lastname', 'email','password', 'role_id', 'is_active'];
+    protected $fillable = ['firstname', 'lastname', 'email','password', 'role_id', 'is_active', 'activated_at'];
 
     /**
      * Get the role record associated with the user.
