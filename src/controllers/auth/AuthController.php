@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Controllers\Core\BaseAdminController;
 use Forms\Auth\AuthForm;
 use Forms\Auth\ForgotPasswordForm;
+use Forms\Auth\PasswordRecoveryForm;
 use Models\Recovery;
 use Models\Role;
 use Models\User;
@@ -204,38 +205,16 @@ class AuthController extends BaseAdminController
      */
     public function getPasswordRecovery(Request $request, Response $response, $args) {
         try {
-            die('On est laaaa');
-            $token = $args['token'];
-            $recovery = Recovery::where('token', $token)->firstOrFail();
-            $now = time();
+            $passwordRecoveryForm = new PasswordRecoveryForm(['token' => $args['token']]);
+            $this->tpl_vars['form'] = $passwordRecoveryForm->render();
 
-            if (strtotime($recovery->expires_at) < $now) {
-                $recovery->forceDelete();
-                return $response->withRedirect($this->router->pathFor('getAuth', [], [
-                    'new_password' => 'false',
-                ]));
-            }
-
-            $tplData = [
-                'token' => $token
-            ];
-
-            if ($request->getParam('mismatch')) {
-                $tplData['mismatch'] = true;
-            }
-
-            return $this->twig->render($response, 'auth/reset_password.twig', $tplData);
-
+            return $this->twig->render($response, 'auth/password_recovery.twig', $this->tpl_vars);
         } catch (\Exception $e) {
-            return $response->withRedirect($this->router->pathFor('getAuth', [], [
-                'new_password' => 'false',
-            ]));
+            dd($args, $e->getMessage(), $e->getLine());
+            // Unable to complete request, redirect to login page with no information
+            return $response->withRedirect($this->router->pathFor('getAuth', [], ['code' => __LINE__]));
         }
-
-
     }
-
-
 
     public function postPasswordRecovery(Request $request, Response $response, $args) {
         try {
@@ -306,7 +285,9 @@ class AuthController extends BaseAdminController
         return $response->withRedirect($this->router->pathFor('getAuth'));
     }
 
-    private function redirectErrorForgotPassword(Response $response, int $line = -42) {
+    //@TODO : To be moved and better thinked (generalist)
+    private function redirectErrorForgotPassword(Response $response, $line = -42) {
+        $line = (int)$line;
         $this->addErrorMessage($this->translator->trans('unable_to_retrieve_password')." (Code: $line)");
         $this->persistMessages();
         return $response->withRedirect($this->router->pathFor('getForgotPassword'));

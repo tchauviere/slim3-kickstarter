@@ -11,15 +11,15 @@ use Controllers\Auth\AuthController;
 use Controllers\Front\RegisterController;
 use Middlewares\Core\RecoveryPasswordTokenMiddleware;
 
-
-
 $app->group('/auth', function () use ($app) {
     /*
      * Display routes
      */
     $app->get('/login', AuthController::class.':getAuth')->setName('getAuth');
     $app->get('/forgot/password', AuthController::class.':getForgotPassword')->setName('getForgotPassword');
-    $app->get('/password/recovery/{token}', AuthController::class.':getPasswordRecovery')->add(new RecoveryPasswordTokenMiddleware($app->getContainer()))->setName('getPasswordRecovery');
+    $app->get('/password/recovery/{token}', AuthController::class.':getPasswordRecovery')
+        ->add(new RecoveryPasswordTokenMiddleware($app->getContainer())) // Middleware to check given token validity and authorization
+        ->setName('getPasswordRecovery');
 
     $app->get('register', RegisterController::class.':getRegister')->setName('getRegister');
 
@@ -28,7 +28,9 @@ $app->group('/auth', function () use ($app) {
      */
     $app->post('/login', AuthController::class.':postAuth')->setName('postAuth');
     $app->post('/forgot/password', AuthController::class.':postForgotPassword')->setName('postForgotPassword');
-    $app->post('/password/recovery/{token}', AuthController::class.':postPasswordRecovery')->add(new RecoveryPasswordTokenMiddleware($app->getContainer()))->setName('postPasswordRecovery');
+    $app->post('/password/recovery/{token}', AuthController::class.':postPasswordRecovery')
+        ->add(new RecoveryPasswordTokenMiddleware($app->getContainer())) // Middleware to check given token validity and authorization
+        ->setName('postPasswordRecovery');
     $app->get('/logout', AuthController::class.':getLogout')->setName('getLogout');
 
 

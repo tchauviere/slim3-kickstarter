@@ -46,9 +46,17 @@ abstract class BaseForm
      */
     protected $default_values = [];
 
+    /**
+     * Array of option/value for form you can use
+     * @var array $data
+     */
+    protected $date = [];
 
-    public function __construct()
+
+    public function __construct(array $data = [])
     {
+        $this->data = $data;
+
         $this->container = $GLOBALS['container'];
         $this->translator = $this->container->get('translator');
         $this->router = $this->container->get('router');

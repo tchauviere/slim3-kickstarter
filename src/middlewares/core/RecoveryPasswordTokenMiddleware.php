@@ -34,29 +34,24 @@ class RecoveryPasswordTokenMiddleware extends BaseMiddleware
         // No token set redirect to auth without information to avoid hacking via brute force
         if (!$token) {
             $response = $response->withRedirect(
-                $this->router->pathFor('getAuth')
+                $this->router->pathFor('getAuth', [], ['code' => __LINE__])
             );
         } else {
-
             // Check if token is valid and that current user is the owner
             $recovery = Recovery::where('token', $token)->first();
             $now = time();
 
             if (!$recovery) {
                 // No recovery for given token, redirect without information to login page to avoid brute force hacking
-
-                $response = $response->withRedirect($this->router->pathFor('getAuth'));
-            }
-
-            if (strtotime($recovery->expires_at) < $now) {
+                $response = $response->withRedirect($this->router->pathFor('getAuth', [], ['code' => __LINE__]));
+            } else if (strtotime($recovery->expires_at) < $now) {
                 // If recovery is expired redirect without information to login page to avoid brute force hacking
                 // And delete recovery process from DB to clean it up.
-
                 $recovery->forceDelete();
-                $response = $response->withRedirect($this->router->pathFor('getAuth'));
+                $response = $response->withRedirect($this->router->pathFor('getAuth', [], ['code' => __LINE__]));
+            } else {
+                $response = $next($request, $response);
             }
-
-            $response = $next($request, $response);
         }
 
         return $response;

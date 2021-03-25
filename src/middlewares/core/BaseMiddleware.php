@@ -9,6 +9,7 @@
 
 namespace Middlewares\Core;
 
+use Illuminate\Database\Capsule\Manager;
 use Psr\Container\ContainerInterface;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
@@ -33,6 +34,11 @@ class BaseMiddleware
      * @var Translator $translator
      */
     protected $translator;
+    /**
+     * @var Manager $eloquent
+     */
+    protected $eloquent;
+
 
     public function __construct(ContainerInterface $container) {
 
@@ -40,5 +46,6 @@ class BaseMiddleware
         $this->router = $container->get('router');
         $this->flash = $container->get('flash');
         $this->translator = $container->get('translator');
+        $this->eloquent = $container->get('eloquent');
     }
 }
