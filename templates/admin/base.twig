@@ -55,6 +55,37 @@
         <!-- Custom scripts for all pages-->
         <script src="{{ base_url() }}/js/admin/sb-admin-2.min.js"></script>
         <script src="{{ base_url() }}/js/admin/global.min.js"></script>
+        <script type="application/javascript">
+            const DataTableLang = {
+                "sProcessing":     "{{ 'dt_s_processing'|trans}}",
+                "sSearch":         "{{ 'dt_a_search'|trans}}",
+                "sLengthMenu":     "{{ 'dt_s_length_menu'|trans}}",
+                "sInfo":           "{{ 'dt_s_info'|trans}}",
+                "sInfoEmpty":      "{{ 'dt_s_info_empty'|trans}}",
+                "sInfoFiltered":   "{{ 'dt_s_info_filtered'|trans}}",
+                "sInfoPostFix":    "",
+                "sLoadingRecords": "{{ 'dt_s_loading_records'|trans}}",
+                "sZeroRecords":     "{{ 'dt_s_zero_records'|trans}}",
+                "sEmptyTable":     "{{ 'dt_s_empty_table'|trans}}",
+                "oPaginate": {
+                    "sFirst":      "{{ 'dt_s_first'|trans}}",
+                    "sPrevious":   "{{ 'dt_s_previous'|trans}}",
+                    "sNext":       "{{ 'dt_s_next'|trans}}",
+                    "sLast":       "{{ 'dt_s_last'|trans}}"
+                },
+                "oAria": {
+                    "sSortAscending":  "{{ 'dt_s_sort_asc'|trans}}",
+                    "sSortDescending": "{{ 'dt_s_sort_dsc'|trans}}"
+                },
+                "select": {
+                    "rows": {
+                        _: "{{ 'dt_s_rows_'|trans}}",
+                        0: "{{ 'dt_s_rows_0'|trans}}",
+                        1: "{{ 'dt_s_rows_1'|trans}}"
+                    }
+                }
+            };
+        </script>
         {% block js %}{% endblock %}
     </body>
 </html>

@@ -102,6 +102,8 @@ class BaseController
         if (isset($flashes['success'])) {
             $this->twig->offsetSet('success', $flashes['success'][0]);
         }
+
+        $this->twig->offsetSet('active_menu', get_called_class());
     }
 
     /**

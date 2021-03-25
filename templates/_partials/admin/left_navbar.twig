@@ -13,7 +13,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {% if active_menu in ['Controllers\\Admin\\DashboardController'] %}active{% endif %}">
         <a class="nav-link" href="{{ path_for('getDashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>{{ 'dashboard_menu_item'|trans }}</span></a>
@@ -22,15 +22,18 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#usersCollapse" aria-expanded="false" aria-controls="usersCollapse">
+    <li class="nav-item {% if active_menu in ['Controllers\\Admin\\UsersController'] %}active{% endif %}">
+        <a class="nav-link {% if active_menu not in [
+            'Controllers\\Admin\\UsersController',
+            'Controllers\\Admin\\RolesController',
+        ] %}collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#usersCollapse" aria-expanded="false" aria-controls="usersCollapse">
             <i class="fas fa-fw fa-users"></i>
             <span>{{ 'users'|trans }}</span>
         </a>
-        <div id="usersCollapse" class="collapse" aria-labelledby="headingUserCollapse" data-parent="#accordionSidebar" style="">
+        <div id="usersCollapse" class="collapse {% if active_menu in ['Controllers\\Admin\\UsersController'] %}show{% endif %}" aria-labelledby="headingUserCollapse" data-parent="#accordionSidebar" style="">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ path_for('getUsers') }}">{{ 'users'|trans }}</a>
-                <a class="collapse-item" href="#">{{ 'roles'|trans }}</a>
+                <a class="collapse-item {% if active_menu == 'Controllers\\Admin\\UsersController' %}active{% endif %}" href="{{ path_for('getUsers') }}">{{ 'users'|trans }}</a>
+                <a class="collapse-item {% if active_menu == 'Controllers\\Admin\\RolesController' %}active{% endif %}" href="#">{{ 'roles'|trans }}</a>
             </div>
         </div>
     </li>
