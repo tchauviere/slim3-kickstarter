@@ -2,7 +2,7 @@
 /**
  * Author:  tchauviere <thibaud.chauviere@gmail.com>
  * Project: slim3-kickstarter
- * File:    AdminController.php
+ * File:    LoginController.php
  * Date:    15/04/2019
  * Time:    12:41
  */
@@ -13,12 +13,9 @@ use Controllers\Core\BaseAdminController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class DashboardController extends BaseAdminController
+class UsersController extends BaseAdminController
 {
-    public function getDashboard(Request $request, Response $response, $args) {
-
-
-
-        return $this->twig->render($response, 'admin/dashboard.twig', $this->tpl_vars);
+    public function getUsers(Request $request, Response $response, $args) {
+        return $this->twig->render($response, 'admin/users/list.twig', $this->tpl_vars);
     }
 }
