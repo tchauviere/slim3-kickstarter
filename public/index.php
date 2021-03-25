@@ -1,5 +1,7 @@
 <?php
 
+use \Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
+
 if (PHP_SAPI == 'cli-server') {
     // To help the built-in PHP dev server, check if the request was actually for
     // something which should probably be served as a static file
@@ -25,6 +27,9 @@ try {
     throw new Exception('Unable to find .env file !', -999);
 }
 
+// Setup TimeZone
+date_default_timezone_set(getenv('APP_TIMEZONE') ?: 'GMT');
+
 // Instantiate the app
 $settings = require __DIR__ . '/../src/config/settings.php';
 $app = new \Slim\App($settings);
@@ -37,7 +42,7 @@ require __DIR__ . '/../src/config/routes.php';
 
 // Add Error Handler Middlewares at application level both for Dev and Prod
 if (strtolower(getenv('SLIM3_MODE')) === 'dev') {
-    $app->add(new \Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware($app));
+    $app->add(new WhoopsMiddleware($app));
 }
 
 // Run app

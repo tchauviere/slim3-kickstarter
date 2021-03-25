@@ -48,8 +48,8 @@ $container['twig'] = function (Container $c) {
     $translator->addLoader('php', new PhpFileLoader());
 
     // Add language files here
-    $translator->addResource('php', $c->get('settings')['lang_path'].'/en_US.php', 'en_US'); // English
-    $translator->addResource('php', $c->get('settings')['lang_path'].'/fr_FR.php', 'fr_FR'); // FR
+    $translator->addResource('php', $c->get('settings')['lang_path'].'/en_US.php', 'en_US'); // EN (USA)
+    $translator->addResource('php', $c->get('settings')['lang_path'].'/fr_FR.php', 'fr_FR'); // FR (FRANCE)
 
     // Instantiate and add Slim specific extension
     $router = $c->get('router');
