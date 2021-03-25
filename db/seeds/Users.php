@@ -24,6 +24,7 @@ class Users extends AbstractSeed
                 'email' => 'superadmin@app.local',
                 'password' => sha1($appSettings['settings']['secret'].'123456789'),
                 'role_id' => 1,
+                'is_active' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
@@ -33,6 +34,7 @@ class Users extends AbstractSeed
                 'email' => 'admin@app.local',
                 'password' => sha1($appSettings['settings']['secret'].'123456789'),
                 'role_id' => 2,
+                'is_active' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
@@ -42,6 +44,7 @@ class Users extends AbstractSeed
                 'email' => 'user@app.local',
                 'password' => sha1($appSettings['settings']['secret'].'123456789'),
                 'role_id' => 3,
+                'is_active' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
