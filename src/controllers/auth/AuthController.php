@@ -214,6 +214,15 @@ class AuthController extends BaseAdminController
         }
     }
 
+    /**
+     *
+     * POST Password Recovery Form, set new user password then set user as logged with its new data
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
     public function postPasswordRecovery(Request $request, Response $response, $args) {
         $passwordRecoveryForm = $this->loadForm(PasswordRecoveryForm::class, ['token' => @$args['token']]);
 
@@ -224,7 +233,7 @@ class AuthController extends BaseAdminController
             $isUpdated = User::where('id', $userID)->update([
                 'password' => $newPassword,
             ]);
-            $user = User::where('id', $userID)->first();
+            $user = User::where('id', $userID)->with('role')->first();
 
             if ($isUpdated && $user) {
                 // Save user in session, then redirect to right home depending on user role
@@ -258,6 +267,15 @@ class AuthController extends BaseAdminController
         }
     }
 
+    /**
+     *
+     * Simply logout any logged in user and redirect them to Auth Form Page
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @return Response
+     */
     public function getLogout(Request $request, Response $response, $args) {
         $this->unsetLoggedUser();
         $this->addSuccessMessage($this->translator->trans('disconnect_success'));
@@ -272,5 +290,4 @@ class AuthController extends BaseAdminController
         $this->persistMessages();
         return $response->withRedirect($this->router->pathFor('getForgotPassword'));
     }
-
 }
